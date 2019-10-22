@@ -7,7 +7,6 @@
 Solución de infraestructuras de red que permite que varias nubes privadas sean visibles entre sí, y que permite la gestión y una comunicación segura entre dispositivos conectados, principalmente de tipo IoT. Viene reforzada con mecanismos de seguridad ligeros y autenticación por doble factor 2FA o con claves físicas U2F.
 
 ## Descripción
-
 MarshMallows es un proyecto basado en computación en la nube que proporciona una solución tipo Platform as a Service para la gestión y comunicaciones seguras de dispositivos IoT. La infraestructura se refuerza con mecanismos de seguridad ligeros y autenticación por doble factor (2FA) o con claves físicas (U2F). Además, permite asociarse con otras nubes desplegadas en la misma red, permitiendo la comunicación y visualización de dispositivos, acorde a los privilegios definidos.
 
 Cada solución se despliega como una "mini-cloud", que permitiría realizar funciones típicas de una nube o plataforma del que penden dispositivos de tipo IoT, principalmente. Pueden llegar a estar instalados en diferentes infraestructuras de red y que a la vez sean visibles entre sí.
@@ -32,8 +31,8 @@ MarshMallows cuenta con tres objetivos principales:
 
 3.- Conectar varios nodos de MarshMallows para acceder y tener visible los dispostivos. Las mini-nubes se pueden interconectar mediante mecanismo web-hook, permitiendo vincular las comunicaciones entre los brokers y el acceso a los usuarios.
 
-## Ventajas
 
+## Ventajas
 **Coste**: Aprovisionamiento ligero sin coste adicional.
 
 **Escalabilidad y flexibilidad**: El servicio reconoce automaticamente nuevos elementos en la red y les asigna un nombre, para ofrecer la conexion a los usuarios.
@@ -45,6 +44,16 @@ MarshMallows cuenta con tres objetivos principales:
 **Seguridad**. Las comunicaciones quedan centralizadas mediante la implementación de un bróker que permite el enlace por canales ligeros y seguros entre los dispositivos. Además, ofrece protección por los mecanismos Protocol Noise Framework y cifrado Diffie-Hellman extremo a extremo.
 
 **Mantenimiento**. Las distribuciones son personalizadas en el ámbito de la nube desplegada pero puede ser configuradas. Los dispositivos pueden moverse de una nube a otra y reasignárseles una IP diferente sin que lo note el usuario final.
+
+
+## Aspectos diferenciadores
+**Autenticación reforzada**: Implementación del acceso por claves físicas mediante Yubico/FIDO keys (U2F) o con OTPs
+
+Solución **aplicable a cualquier infraestructura**, tanto para redes fisicas como locales o mediante contenedores Docker.
+
+**Comunicaciones seguras mediante NPF** ([Noise Protocol Framework](http://www.noiseprotocol.org/)) permitiendo obviar overhead de las soluciones seguras TLS con claves pesadas.
+
+Designación de alias o **identificadores para los elementos de la red**,  ajustados por la identificación de la nube y del dispositivo (nube_id.dispositivo_id[.servicio_id]). Por ejemplo "d1d00a.5g0a" o "d1d00a.5g0a.ssh"
 
 
 ## Tecnologías
