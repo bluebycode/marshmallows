@@ -22,6 +22,26 @@ Es una solución ideal que permite gestionar y separar por dominios estos dispos
   <img  height="450" src="docs/assets/img/infr_schema.png">
 </p>
 
+
+## Objetivos
+MarshMallows cuenta con tres objetivos principales:
+
+- Administrar de manera versátil los dispositivos registrados en distintas soluciones sin necesidad de ser identificados en la red.
+
+- Permitir la gestión via SSH entre dispositivos o desde el portal web proporcionado. Esto requiere de la implementación de un broker que permita un enlace protegido extremo a extremo.
+
+- Conectar varios nodos de MarshMallows para acceder y tener visible los dispostivos. Las mini-nubes se pueden interconectar mediante mecanismo web-hook, permitiendo vincular las comunicaciones entre los brokers y el acceso a los usuarios.
+
+## Ventajas
+
+**Coste**: Aprovisionamiento ligero sin coste adicional.
+**Escalabilidad y flexibilidad**: El servicio reconoce automaticamente nuevos elementos en la red y les asigna un nombre, para ofrecer la conexion a los usuarios.
+**Independencia entre dispositivo y ubicación**: Acceso entre dispositivos sin necesidad de conocer la situación exacta en la red, lo que permite flexibilidad e independencia de los mismos.
+**Rendimiento**. Los mecanismos de comunicación son ligeros y seguros a la vez, permitiendo al dispositivo aprovechar la mayor parte de sus recursos en su tarea principal
+**Seguridad**. Las comunicaciones quedan centralizadas mediante la implementación de un bróker que permite el enlace por canales ligeros y seguros entre los dispositivos. Además, ofrece protección por los mecanismos Protocol Noise Framework y cifrado Diffie-Hellman extremo a extremo.
+**Mantenimiento**. Las distribuciones son personalizadas en el ámbito de la nube desplegada pero puede ser configuradas. Los dispositivos pueden moverse de una nube a otra y reasignárseles una IP diferente sin que lo note el usuario final.
+
+
 ## Tecnologías
 - Go y Ruby (Back-end)
 - Redis & MySQL (Base de datos)
