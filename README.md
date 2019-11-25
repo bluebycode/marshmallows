@@ -1,7 +1,7 @@
 # MarshMallows
 
 <p align="center">
-  <img width="350" height="250" src="docs/assets/img/mm_brand.png">
+  <img width="650" height="250" src="docs/assets/img/mm_brand.png">
 </p>
 <br>
 
