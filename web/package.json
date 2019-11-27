@@ -1,0 +1,72 @@
+{
+  "name": "marshmallows-web",
+  "version": "0.1.0",
+  "description": "React",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vrandkode/marshmallows"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "marshmallows",
+    "dashboard",
+    "dashboard-react"
+  ],
+  "author": "Zen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vrandkode/marshmallows/issueshttps://github.com/creativetimofficial/argon-dashboard-react/issues"
+  },
+  "homepage": "http://marshmallows.cloud/",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "compile-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css",
+    "minify-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.min.css --output-style compressed",
+    "map-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css --source-map true"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "chart.js": "2.7.3",
+    "classnames": "^2.2.6",
+    "d3": "^5.14.2",
+    "moment": "2.24.0",
+    "node-sass": "4.11.0",
+    "nouislider": "13.1.1",
+    "react": "16.8.4",
+    "react-chartjs-2": "2.7.4",
+    "react-copy-to-clipboard": "5.0.1",
+    "react-datetime": "2.16.3",
+    "react-dom": "16.8.4",
+    "react-google-maps": "9.4.5",
+    "react-hover-image": "^1.0.1",
+    "react-input-mask": "^2.0.4",
+    "react-markdown": "^4.2.2",
+    "react-notifications": "^1.4.3",
+    "react-router-dom": "4.3.1",
+    "react-scripts": "2.1.8",
+    "react-splitter-layout": "^4.0.0",
+    "reactstrap": "7.1.0",
+    "xterm": "^4.2.0-vscode1",
+    "xterm-addon-fit": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/googlemaps": "3.30.18",
+    "@types/markerclustererplus": "2.1.33",
+    "@types/react": "16.8.7",
+    "typescript": "3.3.3333"
+  }
+}

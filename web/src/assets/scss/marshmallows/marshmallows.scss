@@ -1,0 +1,43 @@
+.navbar-brand-img2 {
+    max-height: 8rem !important;
+}
+
+.bg-gradient-info{
+    background: linear-gradient(87deg, rgb(148, 197, 219) 0, #33A7D9 100%) !important;
+}
+
+.fill-default {
+    fill: #073763 !important;
+}
+
+.bg-default {
+    background-color: #073763 !important;
+}
+
+.nav-link {
+    color: white;
+}
+
+input {
+    font-family: "Ubuntu" 12pt;
+    font-size: 20pt !important;
+    
+}
+
+.totp{
+    font-size: 20pt !important;
+}
+
+.input-group {
+    .totp {
+        width: 230px !important;
+    }
+}
+
+.mt--7, .my--7 {
+    margin-top: -12rem !important;
+}
+
+#canvas {
+    width: 85% !important;
+}
