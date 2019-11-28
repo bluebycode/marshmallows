@@ -24,8 +24,21 @@ class AuthApi
         return true;
     }
 
-    login = (userdomain, callback) => {
-        callback(true)
+    login = (username, callback) => {
+        console.log(username);
+        console.log("login done")
+        fetch("http://localhost:1414/login", {
+            method: 'post',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({username: username})
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            callback(data)    
+        });
     }
 
     totp = (totp, callback) => {

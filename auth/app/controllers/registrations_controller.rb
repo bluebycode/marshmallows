@@ -23,9 +23,9 @@ class RegistrationsController < ApplicationController
 
   def callback
     webauthn_credential = WebAuthn::Credential.from_create(params)
-    user = User.create!(username: params[:user][:name], webauthn_id: params[:user][:id] )
+    user = User.create!(username: params[:user][:name], webauthn_id: params[:user][:id])
     webauthn_credential.verify(params[:challenge])
-    
+
     key = Key.new(
       external_id: Base64.strict_encode64(webauthn_credential.raw_id),
       public_key: webauthn_credential.public_key,

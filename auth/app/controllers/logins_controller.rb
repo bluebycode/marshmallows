@@ -1,29 +1,30 @@
 # frozen_string_literal: true
 
-class LoginController < ApplicationController
+class LoginsController < ApplicationController
   def new; end
 
   def create
-    filtered_params = params.require(:login).permit(:username)
-    user = User.find_by(username: filtered_params[:login][:username])
+    filtered_params = params.require(:login).permit!
+    user = User.find_by(username: filtered_params[:username])
 
     if user.present?
-      get_options = WebAuthn::Credential.options_for_get(allow: user.credentials.pluck(:external_id))
+      get_options = WebAuthn::Credential.options_for_get(allow: user.keys.pluck(:external_id))
 
       user.update!(current_challenge: get_options.challenge)
 
-      render json: get_options
+      render json: JSON.parse(get_options.to_json).merge(user_id: user.id)
     else
       render json: { status: 'error', message: 'User does not exist' }
     end
   end
 
   def callback
-    filtered_params = params.require(:login).permit(:user, :challenge, :publicKeyCredential)
-    webauthn_credential = WebAuthn::Credential.from_create(params[:login][:publicKeyCredential])
+    webauthn_credential = WebAuthn::Credential.from_get(params)
 
-    user = User.find_by(username: params[:login][:username])
-    render json: { status: 'error', message: 'User does not exist' } unless user
+    user = User.find(params[:user_id])
+    if user.blank?
+      render json: { status: 'error', message: 'User does not exist' }
+    end
 
     key = user.keys.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
 

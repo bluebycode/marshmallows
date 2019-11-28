@@ -1,6 +1,8 @@
 
 import React from "react";
 import InputMask from 'react-input-mask';
+import * as Credential from "../../services/credential";
+import AuthApi from '../../services/auth';
 
 // reactstrap components
 import {
@@ -18,26 +20,18 @@ import {
   Col
 } from "reactstrap";
 
-import AuthApi from '../../services/auth';
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {totp: false}
   }
 
-  handleChange(event) {
-    this.setState({title: event.target.value})
-    var val = event.target.value
-    if (val.charAt(val.length - 1) == '@') {
-      event.target.value += "mm.cloud"
-    }
-  }
-
-  handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      console.log('do validate');
-    }
+  login = e => {
+    console.log(e)
+    e.preventDefault()
+    AuthApi.login(this.state.username, (data) => {
+      Credential.get("http://localhost:1414/login/callback", data);
+    });
   }
   
   render() {
@@ -62,8 +56,8 @@ class Login extends React.Component {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input placeholder="Id" type="email" 
-                      onChange={this.handleChange.bind(this)} 
-                      onKeyDown={this.handleKeyDown}/>
+                      onChange={event => this.setState({ username: event.target.value})}
+                    />
                   </InputGroup>
                 </FormGroup>
                 { AuthApi.isLoggedIn ? <FormGroup>
@@ -79,8 +73,10 @@ class Login extends React.Component {
                   </InputGroup>
                 </FormGroup> : null }
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button" 
-                      style={{width: "300px", borderColor: "#33A7D9", backgroundColor: "#33A7D9", color: "#073763", fontSize: "25px"}}>
+                  <Button 
+                    onClick={event => this.login(event)}
+                    className="my-4" color="primary" type="button" 
+                    style={{width: "300px", borderColor: "#33A7D9", backgroundColor: "#33A7D9", color: "#073763", fontSize: "25px"}}>
                     Go!
                   </Button>
                 </div>

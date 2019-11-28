@@ -1,6 +1,7 @@
 
 import React from "react";
 import * as Credential from "../../services/credential";
+import AuthApi from '../../services/auth';
 
 // reactstrap components
 import {
@@ -16,7 +17,6 @@ import {
   Col
 } from "reactstrap";
 
-import AuthApi from '../../services/auth';
 
 class Register extends React.Component {
   constructor(props){
