@@ -1,3 +1,6 @@
+/*!
+Basado en plantilla: Argon by Creative Tim Copyright 2019. Check MIT License here (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md).  
+*/
 /*eslint-disable*/
 import React from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";

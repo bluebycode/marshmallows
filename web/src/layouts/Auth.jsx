@@ -5,9 +5,9 @@ import key from "../assets/img/key.png"
 import keyHover from "../assets/img/key-hover.png"
 import { Container, Row, Col } from "reactstrap";
 
-import AuthFooter from "components/Footers/AuthFooter.jsx";
+import AuthFooter from "../components/Footers/AuthFooter.jsx";
 import { NotificationManager } from 'react-notifications';
-import routes from "routes.js";
+import routes from "../routes.js";
 import AuthApi from '../services/auth';
 import { NotificationContainer } from 'react-notifications';
 

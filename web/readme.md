@@ -1,16 +1,26 @@
-# Web skeleton
+# Portal web
 
 ## Getting started
 
 ```
-yarn add 
+yarn install 
 ```
+
+
 
 ```
 yarn start
 ```
+Note: Css not found use "yarn compile-sass", install npm -i compile-sass
 
-## Technologies
 
-* Argon React template
+## Componentes
+
+
+
+## Tecnologias
+
+* Argon React (plantilla React)
+* React
+* D3.js (visualización de nodos)
 

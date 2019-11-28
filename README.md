@@ -9,6 +9,9 @@
   <a href="https://slides.com/alvarvrandkode/mmallows/fullscreen?token=s_VTj2I7">PRESENTACIÓN ONLINE</a>
 </p>
 
+<p align="center">
+  <a href="https://trello.com/b/mtqS8XJu/hackaton-cybercamp-2019"><b>Trello</b> planificaci&oacute;n de hitos</a>
+</p>
 
 Solución de infraestructuras de red que permite que varias nubes privadas sean visibles entre sí, y que permite la gestión y una comunicación segura entre dispositivos conectados, principalmente de tipo IoT. Viene reforzada con mecanismos de seguridad ligeros y autenticación por doble factor 2FA o con claves físicas U2F.
 

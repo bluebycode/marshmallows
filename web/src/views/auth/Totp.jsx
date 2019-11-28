@@ -1,6 +1,7 @@
 
 import React from "react";
 import InputMask from 'react-input-mask';
+import auth from '../../services/auth'
 
 import {
   Button,
@@ -15,8 +16,6 @@ import {
   Row,
   Col
 } from "reactstrap";
-
-class auth { // A implementar}
 
 class Totp extends React.Component {
   constructor(props) {

@@ -10,7 +10,7 @@ import {
   Table,
   Col
 } from "reactstrap";
-import Header from "components/Headers/Header.jsx";
+import Header from "../components/Headers/Header.jsx";
 
 class Gateways extends React.Component {
   state = {};

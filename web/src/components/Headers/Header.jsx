@@ -1,4 +1,6 @@
-
+/*!
+Basado en plantilla: Argon by Creative Tim Copyright 2019. Check MIT License here (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md).  
+*/
 import React from "react";
 
 // reactstrap components
