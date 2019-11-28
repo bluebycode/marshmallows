@@ -12,7 +12,8 @@ type Message struct {
 	sid         int32 `default0:0` // sid. session identifier
 }
 
-// Hub .... A representative structure communication component. It handles all incoming/outgoing message from peers: agents or clients.
+// Hub .... A representative structure communication component.
+// It handles all incoming/outgoing message from peers: agents or clients.
 type Hub struct {
 	agents         map[string]*Agent
 	agentsIncoming chan *Message

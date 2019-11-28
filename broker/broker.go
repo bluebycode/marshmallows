@@ -57,6 +57,16 @@ func main() {
 	// routes
 	router := mux.NewRouter()
 
+	///////////
+	// workbench endpoints
+	var cin = make(chan []byte, 1)
+	var cout = make(chan []byte, 1)
+	var incoming = make(chan []byte, 1)
+	var outgoing = make(chan []byte, 1)
+	router.HandleFunc("/admin/channel/create/{channel}/{port}",
+		wsAdminCreateChannelHandler(&incoming, &outgoing, &cin, &cout)).Methods("GET")
+	///////////
+
 	// devices available
 	router.HandleFunc("/devices",
 		httpDevicesHandler).Methods("GET")

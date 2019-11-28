@@ -33,6 +33,12 @@ func Int2string(n int) string {
 	return strconv.FormatInt(int64(n), 10)
 }
 
+// Str2int ... string 2 int conversion
+func Str2int(str string) int {
+	n, _ := strconv.Atoi(str)
+	return n
+}
+
 // toTimestamp ... transform time into milliseconds
 func toTimestamp(t time.Time) int64 {
 	return t.UnixNano() / int64(time.Millisecond)
