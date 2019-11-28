@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RegistrationController
+class RegistrationController < ApplicationController
   def new; end
 
   def create
