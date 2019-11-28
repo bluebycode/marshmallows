@@ -110,7 +110,6 @@ class Nodes extends React.Component {
             .on("end", dragended.bind(this));
     }
 
-    
     draw(){
         const width = this.width;
         const height = this.height;
@@ -184,7 +183,6 @@ class Nodes extends React.Component {
         this.svg = svg;
     }
 
-    
     render() {
         return (
             <div id="canvas" style={this.canvasStyle}>

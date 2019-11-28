@@ -9,6 +9,7 @@ class Navigation extends React.Component {
     constructor(props) {
         super(props);
         this.toggleBottom = this.toggleBottom.bind(this);
+        this.open = this.open.bind(this);
         this.state = {
             bottomVisible: false,
             show: false
@@ -29,6 +30,19 @@ class Navigation extends React.Component {
         }else{
             this.open()
         }
+    }
+
+    open(){
+        this.handleClose()
+        if (this.state.bottomVisible){
+            this.setState(state => ({ bottomVisible: false }));
+            const interval = setInterval(() => {
+                this.setState(state => ({ bottomVisible: true }));
+                clearInterval(interval)
+            }, 100);
+            return
+        }
+        this.setState(state => ({ bottomVisible: true }));
     }
 
     render() {
