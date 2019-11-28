@@ -12,7 +12,7 @@ class LoginController < ApplicationController
 
       user.update!(current_challenge: get_options.challenge)
 
-      render json: { webauthn: get_options, username: user.username }
+      render json: get_options
     else
       render json: { status: 'error', message: 'User does not exist' }
     end

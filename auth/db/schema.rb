@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2019_11_28_094449) do
   create_table "keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "external_id"
     t.string "public_key"
-    t.integer "login_count", default: 0, null: false
+    t.integer "sign_count", default: 0, null: false
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
