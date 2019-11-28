@@ -2,6 +2,7 @@ import React from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import Nodes from './Nodes.jsx'
+import XTerminal from '../terminal/XTerminal';
 
 import { Button, Modal,  ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
@@ -56,7 +57,7 @@ class Navigation extends React.Component {
             {this.state.bottomVisible &&
             (
             <div className="bottom-panel shadow card">
-                bottom
+                <XTerminal token={this.token}/>
             </div>
             )}
         </SplitterLayout>
