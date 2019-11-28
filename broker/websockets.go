@@ -6,6 +6,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gorilla/websocket"
 )
@@ -29,4 +30,8 @@ func wsHandler(connection *websocket.Conn, shutdown chan bool) {
 		}
 		handleConnection(connection, messageType, data)
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

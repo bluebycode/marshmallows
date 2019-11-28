@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Peer. A peer/connection representation. A websocket wrapper to connection.
+// Peer ... A peer/connection representation. A websocket wrapper to connection.
 type Peer struct {
 	hub  *Hub
 	conn *websocket.Conn

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -37,15 +38,28 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// httpDevicesHandler ... retrieve all devices connected
+func httpDevicesHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(devices)
+}
+
+var devices = make(map[string]*Device, 1000)
+
 func main() {
 
-	hub := newMainHub()
+	hub := newMainHub(&devices)
 	go hub.Start()
 
 	port := 8081
 
 	// routes
 	router := mux.NewRouter()
+
+	// devices available
+	router.HandleFunc("/devices",
+		httpDevicesHandler).Methods("GET")
 
 	// peers (devices and client) registration
 	router.HandleFunc("/open/{token}",

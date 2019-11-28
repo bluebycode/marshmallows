@@ -23,7 +23,7 @@ type Hub struct {
 	devices        map[string]*Device
 }
 
-func newMainHub() *Hub {
+func newMainHub(devices *map[string]*Device) *Hub {
 	return &Hub{
 		agents:         make(map[string]*Agent),
 		agentsIncoming: make(chan *Message, 1000),
@@ -31,7 +31,7 @@ func newMainHub() *Hub {
 		register:       make(chan *Agent, 100),
 		unregister:     make(chan *Agent, 100),
 		sessions:       make(chan *Client, 100),
-		devices:        make(map[string]*Device),
+		devices:        *devices,
 	}
 }
 
@@ -48,7 +48,10 @@ func (hub *Hub) Start() {
 			} else {
 				hub.agents[agent.token] = agent
 				log.Println("[hub] Agent under registration:", agent.token)
-				hub.devices[agent.token] = &Device{}
+				hub.devices[agent.token] = &Device{
+					Token:     agent.token,
+					Timestamp: "", //@todo: please fix this
+				}
 			}
 
 		case agent := <-hub.unregister:
