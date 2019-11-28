@@ -61,13 +61,12 @@ class XTerminal extends React.Component {
     }
 
     componentWillUnmount(){
-        console.log("unmounted")
     }
 
     componentDidMount(){
         this.remote = new TerminalHandler(this.container)
         this.remote.connect("aaaaa", this.props.token, () => {
-            console.log("connected")
+            console.log("[terminal] connected")
         })  
     }
 

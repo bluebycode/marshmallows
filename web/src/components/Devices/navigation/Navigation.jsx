@@ -1,6 +1,7 @@
 import React from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
+import Nodes from './Nodes.jsx'
 
 import { Button, Modal,  ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
@@ -35,9 +36,9 @@ class Navigation extends React.Component {
         <SplitterLayout vertical={true} 
             secondaryInitialSize={40} 
             percentage={true}>
-                <div className="bottom-panel shadow card">
-                    top
-                </div>
+            <div>
+                <Nodes onClickNode={this.toggleBottom.bind(this)}/>
+            </div>
             {this.state.bottomVisible &&
             (
             <div className="bottom-panel shadow card">
