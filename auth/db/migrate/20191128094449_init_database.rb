@@ -12,7 +12,6 @@ class InitDatabase < ActiveRecord::Migration[6.0]
 
     create_table :keys do |t|
       t.string :external_id
-      t.string :name
       t.string :public_key
       t.integer :login_count, default: 0, null: false
       t.belongs_to :user, index: true

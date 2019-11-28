@@ -1,0 +1,14 @@
+AllCops:
+  TargetRubyVersion: 2.6.5
+
+Metrics/AbcSize:
+  Max: 18
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+Metrics/MethodLength:
+  Max: 13
+
+Style/Documentation:
+  Enabled: false
