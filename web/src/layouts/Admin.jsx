@@ -1,14 +1,16 @@
-
+/*!
+Basado en plantilla: Argon by Creative Tim Copyright 2019. Check MIT License here (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md).  
+*/
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
-import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
-import AdminFooter from "components/Footers/AdminFooter.jsx";
-import Sidebar from "components/Sidebar/Sidebar.jsx";
+import AdminNavbar from "../components/Navbars/AdminNavbar.jsx";
+import AdminFooter from "../components/Footers/AdminFooter.jsx";
+import Sidebar from "../components/Sidebar/Sidebar.jsx";
 
-import routes from "routes.js";
+import routes from "../routes.js";
 
 class Admin extends React.Component {
   componentDidUpdate(e) {
@@ -51,7 +53,7 @@ class Admin extends React.Component {
           routes={routes}
           logo={{
             innerLink: "/cloud/index",
-            imgSrc: require("assets/img/brand/marshmallow_brand.png"),
+            imgSrc: require("../assets/img/brand/marshmallow_brand.png"),
             imgAlt: "..."
           }}
         />

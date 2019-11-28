@@ -18,9 +18,7 @@ import {
   Col
 } from "reactstrap";
 
-class AuthApi {
-  // A implementar
-}
+import AuthApi from '../../services/auth';
 
 class Login extends React.Component {
   constructor(props) {
@@ -50,7 +48,7 @@ class Login extends React.Component {
             
             <CardHeader className="bg-transparent pb-5" style={{marginBottom: "-100px"}}>
               <div className="text-muted text-center mt-2 mb-3">
-                <img alt="..." style={{width: "200px"}} src={require("assets/img/brand/marshmallow_brand.png")} />
+                <img alt="..." style={{width: "200px"}} src={require("../../assets/img/brand/marshmallow_brand.png")} />
                 <span><h1>**** { AuthApi.u2fenabled ? "true" : "false" } { AuthApi.isLoggedIn ? "true" : "false" }</h1></span>
               </div>
             </CardHeader>
