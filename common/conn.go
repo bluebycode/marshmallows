@@ -27,7 +27,7 @@ func createServerChannel(address string, port int, channelMux *http.ServeMux) {
 
 // createClientChannel ... create a WS channel from client side
 // DEVELOPED BEFORE COMPETITION
-func createClientChannel(address string, port int, path string) {
+func createClientChannel(address string, port int, path string, callback func(in []byte, size int) []byte) {
 	u := url.URL{Scheme: "ws", Host: address + ":" + strconv.FormatInt(int64(port), 10), Path: path}
 	log.Printf("connecting to %s", u.String())
 
@@ -55,10 +55,7 @@ func createClientChannel(address string, port int, path string) {
 	p := &Pipe{
 		r: wc,
 		w: wc,
-		f: func(in []byte, size int) []byte {
-			// @todo: returns message
-			return in
-		}}
+		f: callback}
 	go p.attach(done)
 
 	for {
