@@ -18,7 +18,7 @@ class RegistrationsController < ApplicationController
       data = { status: 'ok', challenge: create_options.challenge, user_attributes: user.attributes }
       render json: data
     else
-      render json: { status: 'error', message: 'User already exists' }, status: :unprocessable_entity
+      render json: { status: 'error', message: 'User already exists' }
     end
   end
 
@@ -36,16 +36,13 @@ class RegistrationsController < ApplicationController
     )
 
     if key.save
-      render json: { status: 'ok' }, status: :ok
+      render json: { status: 'ok' }
     else
-      render json: { status: 'error', message: 'Key not registered' },
-             status: :unprocessable_entity
+      render json: { status: 'error', message: 'Key not registered' }
     end
   rescue WebAuthn::Error => e
-    render json: { status: 'error', message: "Verification failed: #{e.message}" },
-           status: :unprocessable_entity
+    render json: { status: 'error', message: "Verification failed: #{e.message}" }
   rescue StandardError => e
-    render json: { status: 'error', message: 'User could not be created' },
-           status: :unprocessable_entity
+    render json: { status: 'error', message: 'User could not be created' }
   end
 end
