@@ -18,12 +18,11 @@ import {
   PaginationLink,
   Progress,
   Table,
-
-
   UncontrolledTooltip
 } from "reactstrap";
+
 // core components
-import Header from "components/Headers/Header.jsx";
+import Header from "../components/Headers/Header.jsx";
 
 class Dashboard extends React.Component {
   render() {

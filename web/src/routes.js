@@ -1,11 +1,11 @@
 
-import Devices from "views/Devices.jsx";
-import Login from "views/auth/Login.jsx";
-import Register from "views/auth/Register.jsx";
-import TotpRegister from "views/auth/Totp.jsx";
-import Distributions from "views/Distributions.jsx";
-import Dashboard from "views/Dashboard.jsx";
-import Gateways from "views/Gateways.jsx";
+import Devices from "./views/Devices.jsx";
+import Login from "./views/auth/Login.jsx";
+import Register from "./views/auth/Register.jsx";
+import TotpRegister from "./views/auth/Totp.jsx";
+import Distributions from "./views/Distributions.jsx";
+import Dashboard from "./views/Dashboard.jsx";
+import Gateways from "./views/Gateways.jsx";
 
 var routes = [
   {

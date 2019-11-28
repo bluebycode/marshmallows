@@ -9,7 +9,7 @@ import {
   Row,
   Col
 } from "reactstrap";
-import Header from "components/Headers/Header.jsx";
+import Header from "../components/Headers/Header.jsx";
 
 class Distributions extends React.Component {
   state = {};
@@ -38,7 +38,7 @@ class Distributions extends React.Component {
                   {/* Chart */}
                   <div className="shadow">
                     <span>Raspbian distribution</span>
-                    <img style={{width: "400px"}} src={require("assets/img/distro/raspbian.png")}></img>
+                    <img style={{width: "400px"}} src={require("../assets/img/distro/raspbian.png")}></img>
                     <div className="btn-wrapper text-center">
                     <Button
                       className="btn-neutral btn-icon"
@@ -48,7 +48,7 @@ class Distributions extends React.Component {
                       <span className="btn-inner--icon">
                         <img
                           alt="..."
-                          src={require("assets/img/icons/common/github.svg")}
+                          src={require("../assets/img/icons/common/github.svg")}
                         />
                       </span>
                       <span className="btn-inner--text">Raspbian image</span>
