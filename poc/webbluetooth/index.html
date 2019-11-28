@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <title>Node Workshop</title>
+   <style>
+
+        .links line {
+          stroke: #999;
+          stroke-opacity: 0.6;
+        }
+        
+        .nodes circle {
+          stroke: #fff;
+          stroke-width: 1.5px;
+        }
+        
+        text {
+          font-family: sans-serif;
+          font-size: 10px;
+        }
+        
+        </style>
+ </head>
+ <body>
+    <script src="engine.js"></script>
+    <p>Device Info</p>
+        
+    <form>
+        <button id="buttonGetBattery">Get session key</button>
+    </form>
+    
+    <script>
+        
+        function isWebBluetoothEnabled() {
+            console.log('isWebBluetoothEnabled enabled!??')
+            if (navigator.bluetooth) {
+                console.log('isWebBluetoothEnabled enabled!')
+            return true;
+            } else {
+            console.log('Web Bluetooth API is not available.\n' +
+                'Please make sure the "Experimental Web Platform features" flag is enabled.');
+            return false;
+            }
+        }
+        </script>
+    <script>
+        document.querySelector('#buttonGetBattery').addEventListener('click', function(event) {
+            console.log("get battery")
+            event.stopPropagation();
+            event.preventDefault();
+            if (isWebBluetoothEnabled()) {
+                getBattery();
+            }
+        });
+        document.querySelector('#buttonSetBattery').addEventListener('click', function(event) {
+            console.log("set battery")
+            event.stopPropagation();
+            event.preventDefault();
+            if (isWebBluetoothEnabled()) {
+                setBattery();
+            }
+        });
+    </script>
+ </body>
+</html>
