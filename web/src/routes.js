@@ -6,7 +6,7 @@ import TotpRegister from "./views/auth/Totp.jsx";
 import Distributions from "./views/Distributions.jsx";
 import Dashboard from "./views/Dashboard.jsx";
 import Assign from "./views/auth/Assign.jsx";
-//import Gateways from "./views/Gateways.jsx";
+import Devices from "./views/Devices.jsx";
 
 var routes = [
   {
@@ -17,7 +17,6 @@ var routes = [
     visible: true,
     layout: "/cloud"
   },
-  /*, @todo: Disabled until view was ready
   {
     path: "/devices",
     name: "Devices",
@@ -26,22 +25,6 @@ var routes = [
     visible: true,
     layout: "/cloud"
   },
-  {
-    path: "/gateway/all",
-    name: "Gateways",
-    icon: "ni ni-mobile-button text-primary",
-    component: Gateways,
-    visible: true,
-    layout: "/cloud"
-  },
-  {
-    path: "/gateway/add",
-    name: "AddGateway",
-    icon: "ni ni-mobile-button text-primary",
-    component: Gateways,
-    visible: false,
-    layout: "/cloud"
-  },*/
   {
     path: "/distributions",
     name: "Distributions",

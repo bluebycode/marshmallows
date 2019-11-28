@@ -39,7 +39,7 @@ class Devices extends React.Component {
                     </Row>
                   </CardHeader>
                   <CardBody style={{height:"600px", padding: "0px"}}>
-                    {/*<Navigation></Navigation>*/}
+                    <Navigation></Navigation>
                   </CardBody>
                 </Card>
             </Col>

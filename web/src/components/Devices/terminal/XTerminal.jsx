@@ -19,7 +19,6 @@ class TerminalHandler {
             this.terminal.write('\r\n~$ ');
         }
         this.terminal.prompt()
-
         this.terminal.onKey((e) => {
             const ev = e.domEvent;
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
