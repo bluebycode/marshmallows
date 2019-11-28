@@ -1,15 +1,44 @@
 #!/usr/bin/python3
 
 import dbus
-import ecdsa
+from Crypto.PublicKey import RSA
 
 from advertisement import Advertisement
 from service import Application, Service, Characteristic, Descriptor
 
+class Crypto():
+    def __init__(self):
+        # Generate keys
+        print ("generating keys")
+        self.keys = RSA.generate(1024)
+        self.private_key = str(self.keys.export_key())
+        self.private_key = self.private_key.replace('-----BEGIN RSA PRIVATE KEY-----\\n', '')
+        self.private_key = self.private_key.replace('\\n-----END RSA PRIVATE KEY-----', '')
+
+        self.public_key = str(self.keys.publickey().export_key())
+        self.public_key = self.public_key.replace('-----BEGIN PUBLIC KEY-----\\n', '')
+        self.public_key = self.public_key.replace('\\n-----END PUBLIC KEY-----', '')
+        
+        print (len(self.private_key))
+        print()
+        print (len(self.public_key))
+        print()
+
+    def getVkeyHex (self):
+        # return self.vkey.to_string().hex()
+        return None
+
+    def setChallenge (self, challenge):
+        # self.challenge = challenge
+        return None
+
+# Generating keys
+crypto = Crypto()
+
 class AuthenticationAdvertisement(Advertisement):
     def __init__(self, index):
         Advertisement.__init__(self, index, "peripheral")
-        self.add_local_name("Thingy52Authentication")
+        self.add_local_name("Thingy 52 Authentication")
         self.include_tx_power = True
 
 class AuthenticationService(Service):
@@ -25,8 +54,9 @@ class AuthenticationService(Service):
 
 # PUBLIC KEY CHARACTERISTIC =====================================================
 
-class PublicKeyCharacteristic(Characteristic):
+class PublicKey1Characteristic(Characteristic):
     PUBLICKEY_CHARACTERISTIC_UUID = "00000002-710e-4a5b-8d75-3e5b444bc3cf"
+
 
     def __init__(self, service):
         self.notifying = False
@@ -36,52 +66,18 @@ class PublicKeyCharacteristic(Characteristic):
                 ["read"], service)
         self.add_descriptor(PublickeyDescriptor(self))
 
+    def ReadValue(self, options):
+        value = []
+        
+        for c in crypto.getVkeyHex():
+            value.append(dbus.Byte(c.encode()))
+
+        return value
 
 
-    # def get_temperature(self):
-    #     value = []
-    #     unit = "C"
-
-    #     cpu = CPUTemperature()
-    #     temp = cpu.temperature
-    #     if self.service.is_farenheit():
-    #         temp = (temp * 1.8) + 32
-    #         unit = "F"
-
-    #     strtemp = str(round(temp, 1)) + " " + unit
-    #     for c in strtemp:
-    #         value.append(dbus.Byte(c.encode()))
-
-    #     return value
-
-    # def set_temperature_callback(self):
-    #     if self.notifying:
-    #         value = self.get_temperature()
-    #         self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
-
-    #     return self.notifying
-
-    # def StartNotify(self):
-    #     if self.notifying:
-    #         return
-
-    #     self.notifying = True
-
-    #     value = self.get_temperature()
-    #     self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
-    #     self.add_timeout(NOTIFY_TIMEOUT, self.set_temperature_callback)
-
-    # def StopNotify(self):
-    #     self.notifying = False
-
-    # def ReadValue(self, options):
-    #     value = self.get_temperature()
-
-    #     return value
-
-class PublickeyDescriptor(Descriptor):
+class Publickey1Descriptor(Descriptor):
     PUBLICKEY_DESCRIPTOR_UUID = "2901"
-    PUBLICKEY_DESCRIPTOR_VALUE = "Thingy52 Public Key"
+    PUBLICKEY_DESCRIPTOR_VALUE = "Thingy52 Public Key1"
 
     def __init__(self, characteristic):
         Descriptor.__init__(
@@ -115,21 +111,16 @@ class ChallengeCharacteristic(Characteristic):
                 ["write"], service)
         self.add_descriptor(ChallengeDescriptor(self))
 
-    # def WriteValue(self, value, options):
-    #     val = str(value[0]).upper()
-    #     if val == "C":
-    #         self.service.set_farenheit(False)
-    #     elif val == "F":
-    #         self.service.set_farenheit(True)
+    def WriteValue(self, value, options):
 
-    # def ReadValue(self, options):
-    #     value = []
+        val = []
 
-    #     if self.service.is_farenheit(): val = "F"
-    #     else: val = "C"
-    #     value.append(dbus.Byte(val.encode()))
+        print ("received challenge")
+        
+        for v in value:
+            val.append(hex(int(v)))
 
-    #     return value
+        crypto.setChallenge (val)
 
 class ChallengeDescriptor(Descriptor):
     CHALLENGE_DESCRIPTOR_UUID = "2901"
@@ -227,7 +218,6 @@ class ChallengeresponseDescriptor(Descriptor):
 
 
 # MAIN =====================================================
-
 
 app = Application()
 app.add_service(AuthenticationService(0))
