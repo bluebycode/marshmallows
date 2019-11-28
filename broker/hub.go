@@ -12,7 +12,8 @@ type Message struct {
 	sid         int32 `default0:0` // sid. session identifier
 }
 
-// Hub .... A representative structure communication component. It handles all incoming/outgoing message from peers: agents or clients.
+// Hub .... A representative structure communication component.
+// It handles all incoming/outgoing message from peers: agents or clients.
 type Hub struct {
 	agents         map[string]*Agent
 	agentsIncoming chan *Message
@@ -20,16 +21,19 @@ type Hub struct {
 	register       chan *Agent
 	unregister     chan *Agent
 	sessions       chan *Client
+	devices        map[string]*Device
 }
 
-func newMainHub() *Hub {
+func newMainHub(devices *map[string]*Device) *Hub {
 	return &Hub{
 		agents:         make(map[string]*Agent),
 		agentsIncoming: make(chan *Message, 1000),
 		usersIncoming:  make(chan *Message, 1000),
 		register:       make(chan *Agent, 100),
 		unregister:     make(chan *Agent, 100),
-		sessions:       make(chan *Client, 100)}
+		sessions:       make(chan *Client, 100),
+		devices:        *devices,
+	}
 }
 
 // Start .. performs the subscription to receive and sending connections
@@ -40,7 +44,16 @@ func (hub *Hub) Start() {
 		case agent := <-hub.register:
 			// Agent registration
 			// ..
-			log.Println("[hub] Agent already registered ?", agent)
+			if _, ok := hub.agents[agent.token]; ok {
+				log.Println("[hub] Agent already registered") //@todo close?
+			} else {
+				hub.agents[agent.token] = agent
+				log.Println("[hub] Agent under registration:", agent.token)
+				hub.devices[agent.token] = &Device{
+					Token:     agent.token,
+					Timestamp: "", //@todo: please fix this
+				}
+			}
 
 		case agent := <-hub.unregister:
 			// Agent unregistration
