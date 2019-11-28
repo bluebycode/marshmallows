@@ -3,6 +3,9 @@ import React from "react";
 import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
 
+import Configuration from "../../services/configuration"
+import { NotificationManager } from 'react-notifications';
+
 // reactstrap components
 import {
   Button,
@@ -28,11 +31,13 @@ class Register extends React.Component {
 
   // Calls the authentication to perform registration
   registration = (e) => {
-    console.log(e)
     e.preventDefault()
     AuthApi.registration(this.state.username, (data) => {
-      Credential.create("http://localhost:1414/registration/callback", data);
-      console.log("registered!");
+      Credential.create(Configuration.authAddress("/registration/callback"), data, (response) => {
+        console.log("registered!");
+        this.props.history.push("/auth/login");
+        NotificationManager.success('You have been registered', 'Successful!', 2000);
+      });
     });
   }
 
@@ -52,6 +57,13 @@ class Register extends React.Component {
                     </InputGroupAddon>
                     <Input placeholder="Username" type="text" 
                        onChange={event => this.setState({ username: event.target.value})}
+                       onKeyDown={event => {
+                        this.setState({ username: event.target.value})
+                        if (event.key === 'Enter') {
+                          this.registration(event) 
+                        }
+                       }
+                      }
                     />
                   </InputGroup>
                 </FormGroup>

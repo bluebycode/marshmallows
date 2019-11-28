@@ -5,6 +5,7 @@ import Register from "./views/auth/Register.jsx";
 import TotpRegister from "./views/auth/Totp.jsx";
 import Distributions from "./views/Distributions.jsx";
 import Dashboard from "./views/Dashboard.jsx";
+import Assign from "./views/auth/Assign.jsx";
 //import Gateways from "./views/Gateways.jsx";
 
 var routes = [
@@ -72,6 +73,14 @@ var routes = [
     icon: "ni ni-cloud-download-95 text-blue",
     component: TotpRegister,
     layout: "/auth"
+  },
+  {
+    path: "/assign",
+    name: "Token",
+    visible: false,
+    icon: "ni ni-cloud-download-95 text-blue",
+    component: Assign,
+    layout: "/admin"
   },
 ];
 export default routes;
