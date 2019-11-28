@@ -9,7 +9,16 @@ class AuthApi
     // Registration endpoint (localhost:1414/registrations/)
     registration = (username, callback) => {
         console.log("Registration done")
-        callback()
+        fetch("localhost:1414/registrations", {
+            method: 'post',
+            body: JSON.stringify({
+                username: username
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            callback(data)    
+        });
     }
 
     isLoggedIn = () => {
