@@ -20,6 +20,7 @@ type Hub struct {
 	register       chan *Agent
 	unregister     chan *Agent
 	sessions       chan *Client
+	devices        map[string]*Device
 }
 
 func newMainHub() *Hub {
@@ -29,7 +30,9 @@ func newMainHub() *Hub {
 		usersIncoming:  make(chan *Message, 1000),
 		register:       make(chan *Agent, 100),
 		unregister:     make(chan *Agent, 100),
-		sessions:       make(chan *Client, 100)}
+		sessions:       make(chan *Client, 100),
+		devices:        make(map[string]*Device),
+	}
 }
 
 // Start .. performs the subscription to receive and sending connections
@@ -40,7 +43,13 @@ func (hub *Hub) Start() {
 		case agent := <-hub.register:
 			// Agent registration
 			// ..
-			log.Println("[hub] Agent already registered ?", agent)
+			if _, ok := hub.agents[agent.token]; ok {
+				log.Println("[hub] Agent already registered") //@todo close?
+			} else {
+				hub.agents[agent.token] = agent
+				log.Println("[hub] Agent under registration:", agent.token)
+				hub.devices[agent.token] = &Device{}
+			}
 
 		case agent := <-hub.unregister:
 			// Agent unregistration
