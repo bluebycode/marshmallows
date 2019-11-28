@@ -17,7 +17,20 @@ import {
   Col
 } from "reactstrap";
 
+import AuthApi from '../../services/auth';
+
 class Register extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      username: ''
+    }
+  }
+  // Calls the authentication to perform registration
+  registration(e){
+    e.preventDefault()
+    AuthApi.registration(this.state.username)
+  }
   render() {
     return (
       <>
@@ -32,21 +45,14 @@ class Register extends React.Component {
                         <i className="ni ni-hat-3" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Name" type="text" />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-email-83" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Email" type="email" />
+                    <Input placeholder="Username" type="text" 
+                    onChange={event => this.setState({ username: event.target.value})}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button">
+                  <Button className="mt-4" color="primary" type="button" 
+                    onClick={e => this.handleRegistration(e)}>
                     Create account
                   </Button>
                 </div>
