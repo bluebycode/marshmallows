@@ -1,12 +1,18 @@
+
+
 /**
  * Authentication Api. Represents the client side service which calls to authentication API to perform login/register/2fa/u2f.
  */
 class AuthApi 
 {
+    constructor(){
+        this.buildUrl = (path) => { return "http://192.168.43.104:3000" + path}
+    }
+    
     // Registration endpoint (localhost:1414/registrations/)
     registration = (username, callback) => {
         console.log("Registration done")
-        fetch("http://localhost:1414/registration", {
+        fetch(this.buildUrl("/registration"), {
             method: 'post',
             headers: { 
                 'Content-Type': 'application/json',
@@ -27,7 +33,7 @@ class AuthApi
     login = (username, callback) => {
         console.log(username);
         console.log("login done")
-        fetch("http://localhost:1414/login", {
+        fetch(this.buildUrl("/login"), {
             method: 'post',
             headers: { 
                 'Content-Type': 'application/json',

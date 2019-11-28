@@ -9,7 +9,7 @@ function getCSRFToken() {
   }
 }
 
-function callback(url, body) {
+function callback(url, onSuccess, body) {
   fetch(url, {
     method: "POST",
     body: JSON.stringify(body),
@@ -23,13 +23,14 @@ function callback(url, body) {
     if (response.ok) {
       // window.location.replace("/")
       console.log("SI444");
+      onSuccess("genial!")
     } else {
       console.log("NO1212");
     }
   });
 }
 
-function create(callbackUrl, credentialOptions) {
+function create(callbackUrl, credentialOptions, onSuccess) {
   console.log("--------------", credentialOptions);
   WebAuthnJSON.create({ "publicKey": credentialOptions }).then(credential => {
     const full_credential = {
@@ -37,7 +38,7 @@ function create(callbackUrl, credentialOptions) {
       user: credentialOptions.user,
       challenge: credentialOptions.challenge
     };
-    callback(callbackUrl, full_credential);
+    callback(callbackUrl, onSuccess, full_credential);
   }).catch(function(error) {
     console.log(error);
   });
@@ -45,7 +46,7 @@ function create(callbackUrl, credentialOptions) {
   console.log("Creating new public key credential...");
 }
 
-function get(callbackUrl, credentialOptions) {
+function get(callbackUrl, credentialOptions, onSuccess) {
   WebAuthnJSON.get({ "publicKey": credentialOptions }).then(function(credential) {
     const full_credential = {
       ...credential,
@@ -53,7 +54,7 @@ function get(callbackUrl, credentialOptions) {
       challenge: credentialOptions.challenge
     };
     console.log("object", full_credential);
-    callback(callbackUrl, full_credential);
+    callback(callbackUrl, onSuccess, full_credential);
   }).catch(function(error) {
     console.log(error);
   });

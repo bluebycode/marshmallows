@@ -4,6 +4,10 @@ import InputMask from 'react-input-mask';
 import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
 
+import Configuration from "../../services/configuration"
+import { NotificationManager } from 'react-notifications';
+
+
 // reactstrap components
 import {
   Button,
@@ -20,6 +24,7 @@ import {
   Col
 } from "reactstrap";
 
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +35,10 @@ class Login extends React.Component {
     console.log(e)
     e.preventDefault()
     AuthApi.login(this.state.username, (data) => {
-      Credential.get("http://localhost:1414/login/callback", data);
+      Credential.get(Configuration.authAddress("/login/callback"), data, (response) => {
+        this.props.history.push("/cloud/index");
+        NotificationManager.success('You have been logged in', 'Successful!', 2000);
+      });
     });
   }
   
