@@ -6,6 +6,12 @@ class AuthApi
     constructor(){  
     }
 
+    // Registration endpoint (localhost:1414/registrations/)
+    registration = (username, callback) => {
+        console.log("Registration done")
+        callback()
+    }
+
     isLoggedIn = () => {
         return true;
     }
