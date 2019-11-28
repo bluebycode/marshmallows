@@ -1,11 +1,11 @@
 
-import Devices from "./views/Devices.jsx";
+//import Devices from "./views/Devices.jsx";
 import Login from "./views/auth/Login.jsx";
 import Register from "./views/auth/Register.jsx";
 import TotpRegister from "./views/auth/Totp.jsx";
 import Distributions from "./views/Distributions.jsx";
 import Dashboard from "./views/Dashboard.jsx";
-import Gateways from "./views/Gateways.jsx";
+//import Gateways from "./views/Gateways.jsx";
 
 var routes = [
   {
@@ -16,6 +16,7 @@ var routes = [
     visible: true,
     layout: "/cloud"
   },
+  /*, @todo: Disabled until view was ready
   {
     path: "/devices",
     name: "Devices",
@@ -39,7 +40,7 @@ var routes = [
     component: Gateways,
     visible: false,
     layout: "/cloud"
-  },
+  },*/
   {
     path: "/distributions",
     name: "Distributions",
