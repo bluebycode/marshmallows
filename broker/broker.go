@@ -45,7 +45,12 @@ func httpDevicesHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(devices)
 }
 
+// Devices pool
 var devices = make(map[string]*Device, 1000)
+
+// ChannelIO
+var channels = make(map[int]channelIO)
+var releases = make(map[int]chan bool)
 
 func main() {
 
@@ -74,6 +79,10 @@ func main() {
 	// peers (devices and client) registration
 	router.HandleFunc("/open/{token}",
 		wsPeersHandler(hub))
+
+	// an e2e connection
+	router.HandleFunc("/channel/{token}/ws",
+		wsChannelHandler)
 
 	// server
 	http.Handle("/", router)
