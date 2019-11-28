@@ -3,20 +3,19 @@
  */
 class AuthApi 
 {
-    constructor(){  
-    }
-
     // Registration endpoint (localhost:1414/registrations/)
     registration = (username, callback) => {
         console.log("Registration done")
-        fetch("localhost:1414/registrations", {
+        fetch("http://localhost:1414/registration", {
             method: 'post',
-            body: JSON.stringify({
-                username: username
-            })
-        }).then(function(response) {
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({username: username})
+        }).then(response => {
             return response.json();
-        }).then(function(data) {
+        }).then(data => {
             callback(data)    
         });
     }

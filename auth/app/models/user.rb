@@ -2,7 +2,7 @@
 
 class User < ApplicationRecord
   has_many :keys, dependent: :destroy
-  validates :username, presence: true, uniqueness: true
+  validates :username, presence: true, uniqueness: { case_sensitive: true }
 
   after_initialize do
     self.webauthn_id ||= WebAuthn.generate_user_id

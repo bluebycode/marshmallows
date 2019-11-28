@@ -1,11 +1,11 @@
 
 import React from "react";
+import * as Credential from "../../services/credential";
 
 // reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -13,7 +13,6 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
   Col
 } from "reactstrap";
 
@@ -26,12 +25,17 @@ class Register extends React.Component {
       username: ''
     }
   }
+
   // Calls the authentication to perform registration
   registration = (e) => {
     console.log(e)
     e.preventDefault()
-    AuthApi.registration(this.state.username, ()=> {console.log("registered!")})
+    AuthApi.registration(this.state.username, (data) => {
+      Credential.create("http://localhost:1414/registration/callback", data);
+      console.log("registered!");
+    });
   }
+
   render() {
     return (
       <>

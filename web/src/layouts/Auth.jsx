@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import HoverImage from "react-hover-image"
+// import HoverImage from "react-hover-image"
 import key from "../assets/img/key.png"
 import keyHover from "../assets/img/key-hover.png"
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row } from "reactstrap";
 
 import AuthFooter from "../components/Footers/AuthFooter.jsx";
 import { NotificationManager } from 'react-notifications';
@@ -54,7 +54,7 @@ class Auth extends React.Component {
         
           <div className="header bg-gradient-info py-7 py-lg-8">
             <div>
-            <img
+            <img alt="key"
               src={this.state.key}
               onClick={() => this.toggleU2F() }
               style={{ width: "48px", position: "absolute", top: "10px", pointerEvents: "all"}}

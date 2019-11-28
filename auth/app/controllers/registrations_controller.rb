@@ -5,7 +5,7 @@ class RegistrationsController < ApplicationController
 
   def create
     filtered_params = params.require(:registration).permit(:username)
-    user = User.new(username: filtered_params[:registration][:username])
+    user = User.new(username: filtered_params[:username])
 
     create_options = WebAuthn::Credential.options_for_create(
       user: {
@@ -15,24 +15,22 @@ class RegistrationsController < ApplicationController
     )
 
     if user.valid? # Do not save, but check if it could be saved
-      data = { status: 'ok', challenge: create_options.challenge, user_attributes: user.attributes }
-      render json: data
+      render json: create_options
     else
       render json: { status: 'error', message: 'User already exists' }
     end
   end
 
   def callback
-    filtered_params = params.require(:registration).permit(:user, :challenge, :publicKeyCredential)
-    webauthn_credential = WebAuthn::Credential.from_create(params[:registration][:publicKeyCredential])
-
-    user = User.create!(params[:registration][:user])
-    webauthn_credential.verify(filtered_params[:registration][:challenge])
-
-    key = user.keys.build(
+    webauthn_credential = WebAuthn::Credential.from_create(params)
+    user = User.create!(username: params[:user][:name], webauthn_id: params[:user][:id] )
+    webauthn_credential.verify(params[:challenge])
+    
+    key = Key.new(
       external_id: Base64.strict_encode64(webauthn_credential.raw_id),
       public_key: webauthn_credential.public_key,
-      sign_count: webauthn_credential.sign_count
+      sign_count: webauthn_credential.sign_count,
+      user_id: user.id
     )
 
     if key.save
