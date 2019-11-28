@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"websocket"
+
+	"github.com/gorilla/websocket"
 )
 
 // channelHub .... A representative structure communication dedicated for channels.
