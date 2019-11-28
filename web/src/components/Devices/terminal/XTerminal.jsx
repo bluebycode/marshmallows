@@ -3,6 +3,7 @@
 import React from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { Terminal} from 'xterm'
+import { Writer, Channel } from '../../../services/channels'
 
 class TerminalHandler {
     constructor(container){
@@ -19,27 +20,37 @@ class TerminalHandler {
             this.terminal.write('\r\n~$ ');
         }
         this.terminal.prompt()
+
+        const channel = new Channel(new Writer(this.terminal))
+
         this.terminal.onKey((e) => {
             const ev = e.domEvent;
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
         
             if (ev.keyCode === 13) {
                 this.terminal.prompt();
-                this.terminal.write('\r\n') //@todo: replace with socket
+                channel.write('\r\n')
             } else if (ev.keyCode === 8) {
                 if (this.terminal._core.buffer.x > 2) {
-                    this.terminal.write('\b \b') //@todo: replace with socket
+                    channel.write('\b \b')
                 }
             } else if (printable) {
-              this.terminal.write(e.key) //@todo: replace with socket
+                channel.write(e.key)
             }
         });
-       
+        this.channel = channel
     }
     // TerminalHandler.connect("d3cd", () => { Connected!})
-    connect = (device) => {
-        // connection
-        // ..
+    connect = (deviceToken) => {
+        setTimeout(() => { 
+            this.channel.open({
+                address: Configuration.brokerChannelAddress(deviceToken),
+                encryption: false
+            }, () => {
+                console.log("CONNECTED!!!")
+                this.connected = true;
+            })
+        }, 1500)
     }
 }
 
