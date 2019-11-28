@@ -27,9 +27,10 @@ class Register extends React.Component {
     }
   }
   // Calls the authentication to perform registration
-  registration(e){
+  registration = (e) => {
+    console.log(e)
     e.preventDefault()
-    AuthApi.registration(this.state.username)
+    AuthApi.registration(this.state.username, ()=> {console.log("registered!")})
   }
   render() {
     return (
@@ -46,13 +47,13 @@ class Register extends React.Component {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input placeholder="Username" type="text" 
-                    onChange={event => this.setState({ username: event.target.value})}
+                       onChange={event => this.setState({ username: event.target.value})}
                     />
                   </InputGroup>
                 </FormGroup>
                 <div className="text-center">
                   <Button className="mt-4" color="primary" type="button" 
-                    onClick={e => this.handleRegistration(e)}>
+                    onClick={event => this.registration(event)}>
                     Create account
                   </Button>
                 </div>
