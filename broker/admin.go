@@ -8,7 +8,7 @@ import (
 )
 
 // finished channels
-var channels = make(map[string]chan bool)
+var finishedChannels = make(map[string]chan bool)
 
 // wsAdminCreateChannelHandler ... handles the admin endpoint to create channel
 func wsAdminCreateChannelHandler(incoming *chan []byte, outgoing *chan []byte, cin *chan []byte, cout *chan []byte) func(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +20,7 @@ func wsAdminCreateChannelHandler(incoming *chan []byte, outgoing *chan []byte, c
 
 		// @todo Add channel before
 		var finished = make(chan bool)
-		channels[channelID] = finished
+		finishedChannels[channelID] = finished
 		go createChannel(channelID, Str2int(port), finished, incoming, outgoing, cin, cout)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(channelID)
