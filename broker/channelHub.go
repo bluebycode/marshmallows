@@ -17,6 +17,31 @@ type channelHub struct {
 	outgoing       chan []byte
 }
 
+// Start .. listen receive and sending connections (text based)
+func (h *channelHub) runCommon() {
+	for {
+		select {
+		case conn := <-h.newConnection:
+			// Registers the connection
+			log.Println("[channels] Incoming connection")
+			h.client = conn
+		case message := <-h.commonIncoming:
+			// Incoming message
+			log.Println("[channels] Incoming message", message)
+			c := h.client
+			err := c.WriteMessage(websocket.TextMessage, message)
+			if err != nil {
+				log.Println("[channels] error:", err)
+				break
+			}
+		case message := <-h.commonOutgoing:
+			// Outgoing message
+			log.Println("[channels] Outgoing message", message)
+			h.incoming <- message
+		}
+	}
+}
+
 // Start .. performs the subscription to receive and sending connections
 func (h *channelHub) run() {
 	for {

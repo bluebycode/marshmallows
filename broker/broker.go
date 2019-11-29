@@ -45,7 +45,12 @@ func httpDevicesHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(devices)
 }
 
+// Devices pool
 var devices = make(map[string]*Device, 1000)
+
+// ChannelIO
+var channels = make(map[int]channelIO)
+var releases = make(map[int]chan bool)
 
 func main() {
 
@@ -57,15 +62,20 @@ func main() {
 	// routes
 	router := mux.NewRouter()
 
-	///////////
+	/////////////////////////////////////////////////////////////////////////////
 	// workbench endpoints
-	var cin = make(chan []byte, 1)
-	var cout = make(chan []byte, 1)
-	var incoming = make(chan []byte, 1)
-	var outgoing = make(chan []byte, 1)
+	// example: http://localhost:8081/admin/channel/create/aaaa/9999
+	// Waiting for connections :8081
+	// channels: map[1:{1 0xc0000ae720 0xc0000ae780 0xc0000ae7e0 0xc0000ae840 0xc00013c070}] {1 0xc0000ae720 0xc0000ae780 0xc0000ae7e0 0xc0000ae840 0xc00013c070}
+	// 2019/11/29 00:54:08 Creating channel  aaaa port: 9999
+	//
+	// lsof -iTCP -P|grep 70169
+	// b         70169 vrandkode    3u  IPv6 0xa9d15b5d3f54c357      0t0  TCP *:8081 (LISTEN)
+	// b         70169 vrandkode    6u  IPv6 0xa9d15b5d3f54bd97      0t0  TCP localhost:8081->localhost:62279 (ESTABLISHED)
+	// b         70169 vrandkode    7u  IPv6 0xa9d15b5d3f549b17      0t0  TCP *:9999 (LISTEN) <-----
 	router.HandleFunc("/admin/channel/create/{channel}/{port}",
-		wsAdminCreateChannelHandler(&incoming, &outgoing, &cin, &cout)).Methods("GET")
-	///////////
+		wsAdminCreateChannelHandler).Methods("GET")
+	/////////////////////////////////////////////////////////////////////////////
 
 	// devices available
 	router.HandleFunc("/devices",
@@ -74,6 +84,10 @@ func main() {
 	// peers (devices and client) registration
 	router.HandleFunc("/open/{token}",
 		wsPeersHandler(hub))
+
+	// an e2e connection
+	router.HandleFunc("/channel/{token}/ws",
+		wsChannelHandler)
 
 	// server
 	http.Handle("/", router)
