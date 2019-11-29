@@ -23,10 +23,11 @@
  </head>
  <body>
     <script src="engine.js"></script>
-    <p>Device Info</p>
+
+    <p> Login with BLE secure device </p>
         
     <form>
-        <button id="buttonGetBattery">Get session key</button>
+        <button id="buttonSelectSecureDevice">Select secure device</button>
     </form>
     
     <script>
@@ -43,23 +44,24 @@
             }
         }
         </script>
+
     <script>
-        document.querySelector('#buttonGetBattery').addEventListener('click', function(event) {
-            console.log("get battery")
+        document.querySelector('#buttonSelectSecureDevice').addEventListener('click', function(event) {
+            console.log("Get secure device public key")
             event.stopPropagation();
             event.preventDefault();
             if (isWebBluetoothEnabled()) {
-                getBattery();
+                getPublicKey();
             }
         });
-        document.querySelector('#buttonSetBattery').addEventListener('click', function(event) {
-            console.log("set battery")
-            event.stopPropagation();
-            event.preventDefault();
-            if (isWebBluetoothEnabled()) {
-                setBattery();
-            }
-        });
+        // document.querySelector('#buttonSetBattery').addEventListener('click', function(event) {
+        //     console.log("set battery")
+        //     event.stopPropagation();
+        //     event.preventDefault();
+        //     if (isWebBluetoothEnabled()) {
+        //         setBattery();
+        //     }
+        // });
     </script>
  </body>
 </html>
