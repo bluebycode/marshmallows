@@ -45,7 +45,7 @@ func createChannel(channelID string, port int, finished chan bool,
 	channelMux := http.NewServeMux()
 	channelMux.HandleFunc("/ws", wsAdminChannelHandler(channelID, &cio.incoming, &cio.outgoing, &cio.cin, &cio.cout))
 	// @todo replace with createServerNoiseChannel("localhost", port, channelMux)
-	createServerChannel("localhost", port, channelMux) //@todo: add security and non placeholders addresses
+	createServerPlainChannel("localhost", port, channelMux) //@todo: add security and non placeholders addresses
 	finished <- true
 }
 
