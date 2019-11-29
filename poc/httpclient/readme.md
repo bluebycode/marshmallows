@@ -1,0 +1,1 @@
+proof-of-concept: authentication call from broker using a http client simple approach
