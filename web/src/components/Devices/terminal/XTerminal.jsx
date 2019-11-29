@@ -4,6 +4,7 @@ import React from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { Terminal} from 'xterm'
 import { Writer, Channel } from '../../../services/channels'
+import Configuration from '../../../services/configuration'
 
 class TerminalHandler {
     constructor(container){
@@ -44,8 +45,8 @@ class TerminalHandler {
     connect = (deviceToken) => {
         setTimeout(() => { 
             this.channel.open({
-                address: Configuration.brokerChannelAddress(deviceToken),
-                encryption: false
+                address: Configuration.brokerChannelAddress("aaaa"),
+                wrapped: true
             }, () => {
                 console.log("CONNECTED!!!")
                 this.connected = true;

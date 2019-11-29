@@ -14,10 +14,9 @@ class Writer {
 }
 
 /**
- * Channel. The secure/non-secure option. When receives a message will write to writer.
+ * Channel. A secure/non-secure option. When receives a message will write to writer.
  * ch = new Channel(new Writer(writer))
  * ch.open({
- *    encryption: true,
  *    sharedKey: KEY
  * }, () => { Connected! })
  *    ch.write("ls -la")
@@ -25,22 +24,22 @@ class Writer {
 class Channel {
     constructor(writer){
         this.writer = writer;
-        this.sharedKey = {}
     }
-    onMessage = (message) => {
-        const msg = (this.opts.encryption) ? this.decrypt(this.sharedKey, message) : message; 
-        this.writer.write(typeof msg == 'string' ? msg : msg.data)
+    onMessage = (evt) => {
+        const msg = evt.data
+        if (msg.data) {
+            this.writer.write(JSON.parse(msg).data)
+        }else{
+            this.writer.write(msg)
+        }
+        
     }
     write = (message) => {
-        const msg = (this.opts.encryption) ? this.encrypt(this.sharedKey, message) : message; 
         this.socket.send(JSON.stringify({
             type: "data",
-            data: msg
+            data: message
         }))
     }
-
-    encrypt = (key, message)  => "ENC("+ key + "," + message  + ")"
-    decrypt = (key, ciphered) => "DEC("+ key + "," + ciphered + ")"
 
     open = (options, callbackOnOpen) => {
         this.opts = options

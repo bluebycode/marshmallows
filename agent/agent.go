@@ -2,17 +2,29 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os/exec"
+	"websocket"
+
+	"github.com/kr/pty"
 )
+
+func pttyAttach(c *websocket.Conn) {
+	cmd := exec.Command("bash")
+	f, _ := pty.Start(cmd)
+	wc := &rwc{c: c}
+	p := &Pipe{}
+	go p.in(f, wc)
+	p.out(wc, f)
+}
 
 func main() {
 	token := GenerateToken(6)
 	fmt.Println("[agent]token", token)
 
-	createClientChannel("localhost", 9999, "/ws", func(in []byte, size int) []byte {
-		log.Println("pipe received", in, size)
-		return in
-	})
+	createClientNoiseChannel("localhost", 9999, "/ws", func(in []byte, size int) []byte { return in },
+		func(conn *websocket.Conn) {
+			pttyAttach(conn)
+		})
 	/*
 		// authorisation channel
 		shutdown := make(chan bool)

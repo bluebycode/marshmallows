@@ -12,9 +12,8 @@ import (
 	"websocket"
 )
 
-// createServerChannel ... create a WS channel from server side
-// DEVELOPED BEFORE COMPETITION
-func createServerChannel(address string, port int, channelMux *http.ServeMux) {
+// createServerNoiseChannel ... create a WS channel from server side
+func createServerNoiseChannel(address string, port int, channelMux *http.ServeMux) {
 	listener, err := net.Listen("tcp", ":"+strconv.FormatInt(int64(port), 10))
 	if err != nil {
 		fmt.Println("Error listening:", err)
@@ -25,9 +24,11 @@ func createServerChannel(address string, port int, channelMux *http.ServeMux) {
 	}
 }
 
-// createClientChannel ... create a WS channel from client side
-// DEVELOPED BEFORE COMPETITION
-func createClientChannel(address string, port int, path string, callback func(in []byte, size int) []byte) {
+type rwHandler func(*websocket.Conn)
+
+// createClientNoiseChannel ... create a WS channel from client side
+func createClientNoiseChannel(address string, port int, path string, callback func(in []byte, size int) []byte,
+	handleReadWrite rwHandler) {
 	u := url.URL{Scheme: "ws", Host: address + ":" + strconv.FormatInt(int64(port), 10), Path: path}
 	log.Printf("connecting to %s", u.String())
 
@@ -48,21 +49,16 @@ func createClientChannel(address string, port int, path string, callback func(in
 	}
 	defer c.Close()
 
-	//done := make(chan struct{})
+	done := make(chan struct{})
 
-	/*wc := &ReadWriteConnector{c: c}
-
-	p := &Pipe{
-		r: wc,
-		w: wc,
-		f: callback}
-	go p.attach(done)
-
+	go func() {
+		defer close(done)
+		handleReadWrite(c)
+	}()
 	for {
 		select {
 		case <-done:
-			fmt.Println("Finished")
 			return
 		}
-	}*/
+	}
 }
