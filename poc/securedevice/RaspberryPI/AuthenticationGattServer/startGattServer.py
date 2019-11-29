@@ -27,6 +27,8 @@ class Crypto():
         self.public_key_ble = self.public_key_ble.replace('\n-----END PUBLIC KEY-----', '')
         self.public_key_ble = self.public_key_ble.replace("\n",'')
 
+        self.challenge_response = 'NONE'
+
 
     def receiveChallenge (self, challenge):
 
@@ -38,12 +40,27 @@ class Crypto():
 
         try:
             decrypted_text = rsa_private_key.decrypt(base64.b64decode(challenge))
-            print (decrypted_text.decode("utf-8"))
         except Exception as e:
             print (e)
 
-        
+        clearData = decrypted_text.decode('utf-8').split(',')
+        print (clearData)
 
+        #random number: clearData[0]
+        #authColor: clearData[1,2and3]
+
+        # Todo: show color. QT4??
+
+        rnumber = str.encode(clearData[0])
+        encrypted_rnumber = rsa_private_key.encrypt(rnumber)
+
+        print("encrypted_rnumber: ")
+        print (base64.b64encode(encrypted_rnumber).decode('utf-8'))
+
+        self.challenge_response = base64.b64encode(encrypted_rnumber).decode('utf-8')
+
+    
+      
 
 # Generating keys
 crypto = Crypto()
@@ -157,8 +174,13 @@ class ChallengeDescriptor(Descriptor):
 
 # CHALLENGE RESPONSE CHARACTERISTIC =====================================================
 
+NOTIFY_TIMEOUT = 1000
+GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"
+
 class ChallengeResponseCharacteristic(Characteristic):
     CHALLENGERESPONSE_CHARACTERISTIC_UUID = "00000004-710e-4a5b-8d75-3e5b444bc3cf"
+
+
 
     def __init__(self, service):
         self.notifying = False
@@ -167,47 +189,53 @@ class ChallengeResponseCharacteristic(Characteristic):
                 self, self.CHALLENGERESPONSE_CHARACTERISTIC_UUID,
                 ["notify","read"], service)
         self.add_descriptor(ChallengeresponseDescriptor(self))
+        self.oldChallengeResponse = ''
 
-    # def get_temperature(self):
-    #     value = []
-    #     unit = "C"
 
-    #     cpu = CPUTemperature()
-    #     temp = cpu.temperature
-    #     if self.service.is_farenheit():
-    #         temp = (temp * 1.8) + 32
-    #         unit = "F"
+    def set_challengeresponse_callback(self):
+        if (self.notifying) and (crypto.challenge_response != self.oldChallengeResponse):
+            value = []
+            print ('crypto.challenge_response')
+            print (crypto.challenge_response)
+            
+            self.oldChallengeResponse = crypto.challenge_response
 
-    #     strtemp = str(round(temp, 1)) + " " + unit
-    #     for c in strtemp:
-    #         value.append(dbus.Byte(c.encode()))
+            for c in crypto.challenge_response:
+                value.append(dbus.Byte(c.encode()))
 
-    #     return value
+            self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+            print ("GATT changed")
 
-    # def set_temperature_callback(self):
-    #     if self.notifying:
-    #         value = self.get_temperature()
-    #         self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        return self.notifying
 
-    #     return self.notifying
 
-    # def StartNotify(self):
-    #     if self.notifying:
-    #         return
+    def StartNotify(self):
 
-    #     self.notifying = True
+        if self.notifying:
+            return
 
-    #     value = self.get_temperature()
-    #     self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
-    #     self.add_timeout(NOTIFY_TIMEOUT, self.set_temperature_callback)
+        self.notifying = True
 
-    # def StopNotify(self):
-    #     self.notifying = False
+        try:
+            value = []
+            for c in crypto.challenge_response:
+                value.append(dbus.Byte(c.encode()))
+            self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+            self.add_timeout(NOTIFY_TIMEOUT, self.set_challengeresponse_callback)
+        except Exception as e:
+            print ("ERROR from start notify")
+            print (e)
 
-    # def ReadValue(self, options):
-    #     value = self.get_temperature()
+    def StopNotify(self):
+        self.notifying = False
+    
+    def ReadValue(self, options):
+        value = []
 
-    #     return value
+        for c in crypto.challenge_response:
+            value.append(dbus.Byte(c.encode()))
+
+        return value
 
 class ChallengeresponseDescriptor(Descriptor):
     CHALLENGERESPONSE_DESCRIPTOR_UUID = "2901"
