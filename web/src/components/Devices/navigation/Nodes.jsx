@@ -20,7 +20,7 @@ class Nodes extends React.Component {
 
     componentWillMount() {
         Promise.all([
-            d3.json(Configuration.brokerAddress("/nodos.json"))
+            d3.json(Configuration.brokerApiAddress("/nodos.json"))
             ]).then( ([data]) => {
                 this.setState({
                     data

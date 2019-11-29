@@ -90,15 +90,6 @@ class Devices extends React.Component {
                         46,53%
                       </td>
                     </tr>
-                    <tr>
-                      <th scope="row"><b>aaaa</b>/ccccc</th>
-                      <td>rpi</td>
-                      <td>2</td>
-                      <td>
-                        <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                        46,53%
-                      </td>
-                    </tr>
                   </tbody>
                 </Table>
               </Card>
