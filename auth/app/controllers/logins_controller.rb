@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class LoginsController < ApplicationController
-  def new; end
-
   def create
     filtered_params = params.require(:login).permit!
     user = User.find_by(username: filtered_params[:username])
@@ -22,9 +20,7 @@ class LoginsController < ApplicationController
     webauthn_credential = WebAuthn::Credential.from_get(params)
 
     user = User.find(params[:user_id])
-    if user.blank?
-      render json: { status: 'error', message: 'User does not exist' }
-    end
+    render json: { status: 'error', message: 'User does not exist' } if user.blank?
 
     key = user.keys.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
 

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RegistrationsController < ApplicationController
-  def new; end
-
   def invite
     filtered_params = params.require(:registration).permit(:username)
     user = User.new(username: filtered_params[:username])
@@ -26,7 +24,7 @@ class RegistrationsController < ApplicationController
 
     if user.blank?
       render json: { status: 'error', message: 'Invalid username or token' } && return
-    elsif user.token_expiration_date.before?(10.minutes.ago)
+    elsif user.token_invalid?
       user.delete
       render json: { status: 'error', message: 'Token expired' } && return
     end
@@ -65,7 +63,7 @@ class RegistrationsController < ApplicationController
     end
   rescue WebAuthn::Error => e
     render json: { status: 'error', message: "Verification failed: #{e.message}" }
-  rescue StandardError => e
+  rescue StandardError
     render json: { status: 'error', message: 'User could not be created' }
   end
 end
