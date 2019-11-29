@@ -2,6 +2,8 @@
 
 import dbus
 import base64
+import subprocess
+from PIL import Image
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES, PKCS1_OAEP
@@ -49,7 +51,16 @@ class Crypto():
         #random number: clearData[0]
         #authColor: clearData[1,2and3]
 
-        # Todo: show color. QT4??
+        try:
+            img = Image.new('RGB', (1024, 1024), color = (int(clearData[1]), int(clearData[2]), int(clearData[3])))
+            img.save('pil_color.png')
+        except Exception as e:
+            print ("error generando imagen")
+            print (e)
+
+
+        #Display the image
+        image = subprocess.Popen(["feh", "--hide-pointer", "-x", "-q", "-B", "black", "-g", "1280x800", "pil_color.png"])
 
         rnumber = str.encode(clearData[0])
         encrypted_rnumber = rsa_private_key.encrypt(rnumber)
@@ -197,7 +208,7 @@ class ChallengeResponseCharacteristic(Characteristic):
             value = []
             print ('crypto.challenge_response')
             print (crypto.challenge_response)
-            
+
             self.oldChallengeResponse = crypto.challenge_response
 
             for c in crypto.challenge_response:
