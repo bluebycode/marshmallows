@@ -21,23 +21,18 @@ func main() {
 }
 
 func authTokenValidation(address string, port int, path string, secretToken string, c chan bool) {
-
 	message := map[string]interface{}{
 		"token": secretToken,
 	}
-
 	bytesRepresentation, err := json.Marshal(message)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	resp, err := http.Post("http://"+address+":"+strconv.Itoa(port)+path, "application/json", bytes.NewBuffer(bytesRepresentation))
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	var response map[string]interface{}
-
 	json.NewDecoder(resp.Body).Decode(&response)
 	log.Println(response)
 	log.Println(response["status"])

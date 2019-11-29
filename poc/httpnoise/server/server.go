@@ -40,6 +40,7 @@ func serverHandler() func(w http.ResponseWriter, r *http.Request) {
 
 func startServer(address string, port int, path string) {
 
+	// NOTE: BE AWARE ABOUT HARDCODED KEYS, THIS IS A PROOF-OF-CONCEPT NOT THE SOLUTION
 	pub, _ := base64.StdEncoding.DecodeString("J6TRfRXR5skWt6w5cFyaBxX8LPeIVxboZTLXTMhk4HM=")
 	priv, _ := base64.StdEncoding.DecodeString("vFilCT/FcyeShgbpTUrpru9n5yzZey8yfhsAx6DeL80=")
 
