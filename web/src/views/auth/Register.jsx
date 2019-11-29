@@ -20,7 +20,6 @@ import {
   Col
 } from "reactstrap";
 
-
 class Register extends React.Component {
   constructor(props){
     super(props)

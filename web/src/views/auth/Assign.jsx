@@ -27,19 +27,20 @@ class Assign extends React.Component {
   // Calls the authentication to perform registration
   generate = (e) => {
     e.preventDefault()
-    AuthApi.generateToken(this.state.username, (token) => {
-        this.setState({token: token})
+    AuthApi.generateToken(this.state.username, (data) => {
+        console.log(data.token)
+        this.setState({token: data.token})
     });
   }
 
   render() {
     return (
       <>
-        <Col lg="6" md="8">
+        <Col lg="12" md="12">
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
               <Form role="form">
-                <FormGroup>
+                <FormGroup lg="3" md="3">
                   <InputGroup className="input-group-alternative mb-3">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
@@ -58,7 +59,7 @@ class Assign extends React.Component {
                     />
                   </InputGroup>
                 </FormGroup>
-                <h2>token={this.state.token}</h2>
+                <a style={{fontSize: "20px"}} href={ this.state.token ? Configuration.webAddress + "/auth/register?token=" + this.state.token : ""}>{ this.state.token ? Configuration.webAddress + "/auth/register?token=" + this.state.token : ""}</a>
               </Form>
             </CardBody>
           </Card>

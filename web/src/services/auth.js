@@ -28,9 +28,9 @@ class AuthApi
     }
 
     generateToken = (username, callback) => {
-        fetch(Configuration.authAddress("/token"), {
+        fetch(Configuration.authAddress("/registration/invite"), {
             method: 'post',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
