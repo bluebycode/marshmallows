@@ -1,6 +1,7 @@
 package main
 
+// Device ... representation of registered devices
 type Device struct {
 	Token     string `json:"token"`
-	Timestamp string `json:"update"`
+	Timestamp int64  `json:"update"`
 }

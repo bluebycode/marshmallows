@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"sync/atomic"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -76,16 +77,19 @@ func handleAgentRegistration(hub *Hub, agent *Agent) {
 		log.Println("[hub] Agent already registered") //@todo close?
 	} else {
 
-		// make authentication
-		go authTokenValidation(authApiAddress, agent.secretToken, c, func() {
-			// Registration
+		// Ask for authorisation
+		c := make(chan bool)
+		go authTokenValidation(authApiAddress+"/agent_registration/check", agent.secretToken, c, func() {
+
+			// Registration if agent is allowed
 			hub.agents[agent.token] = agent
 			log.Println("[hub] Agent under registration:", agent.token)
 
-			// Update the devices pool
+			// Update the devices pool with the latest information
+			// from already registered device
 			hub.devices[agent.token] = &Device{
 				Token:     agent.token,
-				Timestamp: "", //@todo: please fix this
+				Timestamp: time.Now().Unix(),
 			}
 		})
 	}

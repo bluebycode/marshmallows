@@ -30,14 +30,14 @@ func serverHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("RESPONSE", body, auth.GetToken(), auth.GetPublicKey(), auth.GetDeviceId())
 
 		hub.register <- &Agent{
-			token: auth.GetDeviceId(),
-			publicKey: auth.GetPublicKey(),
-			secretToken: auth.GetToken()
+			token:       auth.GetDeviceId(),
+			publicKey:   auth.GetPublicKey(),
+			secretToken: auth.GetToken(),
 		}
 	}
 }
 
-func startServer(address string, port int, path string, hub *Hub) {) {
+func listen(address string, port int, path string, hub *Hub) {
 	l, err := noisesocket.Listen(":"+strconv.Itoa(port), &noisesocket.ConnectionConfig{StaticKey: generateKeys()})
 	if err != nil {
 		fmt.Println("Error listening:", err)

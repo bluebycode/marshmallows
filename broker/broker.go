@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cmd/asm/internal/flags"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -42,7 +41,7 @@ func httpPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		timestamp := time.Now().Unix()
 
 		// Wrap the peer as agent or user
-		agent := &Agent{peer, token, timestamp}
+		agent := &Agent{peer, token, "", "", timestamp} //@todo: ?¿
 		hub.register <- agent
 
 		w.Header().Set("Content-Type", "application/json")
@@ -76,7 +75,7 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		// Wrap the peer as agent or user
 		switch role {
 		case "agent":
-			agent := &Agent{peer, token, timestamp}
+			agent := &Agent{peer, token, "", "", timestamp} //@todo: ?¿
 			go agent.read()
 			hub.register <- agent
 			break
@@ -154,10 +153,8 @@ var authApiAddress string
 func main() {
 	var agents = flag.Int("agentsPort", 8082, "default port listener - agent noise broker")
 	var broker = flag.Int("brokerPort", 8081, "default port listener - main broker")
-	flag.Var(&authApiAddress, "http://192.168.43.104:3000/agent_registration/check", "authAddress")
-	flags.Parse()
-
-	fmt.Println
+	flag.StringVar(&authApiAddress, "authApiAddress", "http://auth.marshmallows.cloud", "authAddress")
+	flag.Parse()
 
 	hub := newMainHub(&devices)
 	go hub.Start()

@@ -21,7 +21,7 @@ func main() {
 	token := GenerateToken(6)
 	fmt.Println("[agent]token", token)
 
-	createClientNoiseChannel("localhost", 9999, "/ws", func(in []byte, size int) []byte { return in },
+	createClientPlainChannel("localhost", 9999, "/ws", func(in []byte, size int) []byte { return in },
 		func(conn *websocket.Conn) {
 			pttyAttach(conn)
 		})
