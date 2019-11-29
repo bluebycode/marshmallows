@@ -56,13 +56,28 @@ async function getPublicKey() {
     var publicKey = await publicKeyCharacteristic.readValue();
     publicKey = new Uint8Array(publicKey.buffer);
     publicKey = String.fromCharCode.apply(null, publicKey)
-    
+
     console.log('public key: '+publicKey)
     
   } catch(error) {
     console.log('Argh! ' + error);
   }
 }
+
+async function generateChallenge() {
+  var rnumber = randomInt(0,1024);
+  var red = randomInt(0,256);
+  var green = randomInt(0,256);
+  var blue = randomInt(0,256);
+
+  var challenge = rnumber.toString()+','+red.toString()+','+green.toString()+','+blue.toString();
+  console.log(challenge)
+}
+
+function randomInt(low, high) {
+  return Math.floor(Math.random() * (high - low) + low)
+}
+
 
 // async function setBattery() {
 //   try {
