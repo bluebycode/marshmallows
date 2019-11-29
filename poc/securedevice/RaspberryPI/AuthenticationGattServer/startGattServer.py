@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 
 import dbus
+import base64
 from Crypto.PublicKey import RSA
+from Crypto.Random import get_random_bytes
+from Crypto.Cipher import AES, PKCS1_OAEP
 
 from advertisement import Advertisement
 from service import Application, Service, Characteristic, Descriptor
@@ -10,27 +13,37 @@ class Crypto():
     def __init__(self):
         # Generate keys
         print ("generating keys")
-        self.keys = RSA.generate(1024)
-        self.private_key = str(self.keys.export_key())
-        self.private_key = self.private_key.replace('-----BEGIN RSA PRIVATE KEY-----\\n', '')
-        self.private_key = self.private_key.replace('\\n-----END RSA PRIVATE KEY-----', '')
+        self.key = RSA.generate(1024)
 
-        self.public_key = str(self.keys.publickey().export_key())
-        self.public_key = self.public_key.replace('-----BEGIN PUBLIC KEY-----\\n', '')
-        self.public_key = self.public_key.replace('\\n-----END PUBLIC KEY-----', '')
+        self.private_key = self.key.export_key()
+        self.public_key = self.key.publickey().exportKey()
+
+        print (self.public_key.decode("utf-8"))
+        print (self.private_key.decode("utf-8"))
         
-        print (len(self.private_key))
-        print()
-        print (len(self.public_key))
-        print()
 
-    def getVkeyHex (self):
-        # return self.vkey.to_string().hex()
-        return None
+        self.public_key_ble = self.key.publickey().export_key().decode("utf-8") 
+        self.public_key_ble = self.public_key_ble.replace('-----BEGIN PUBLIC KEY-----\n', '')
+        self.public_key_ble = self.public_key_ble.replace('\n-----END PUBLIC KEY-----', '')
+        self.public_key_ble = self.public_key_ble.replace("\n",'')
 
-    def setChallenge (self, challenge):
-        # self.challenge = challenge
-        return None
+
+    def receiveChallenge (self, challenge):
+
+        print ("Challenge received:")
+        print (challenge)
+
+        rsa_private_key = RSA.importKey(self.private_key)
+        rsa_private_key = PKCS1_OAEP.new(rsa_private_key)
+
+        try:
+            decrypted_text = rsa_private_key.decrypt(base64.b64decode(challenge))
+            print (decrypted_text.decode("utf-8"))
+        except Exception as e:
+            print (e)
+
+        
+
 
 # Generating keys
 crypto = Crypto()
@@ -54,7 +67,7 @@ class AuthenticationService(Service):
 
 # PUBLIC KEY CHARACTERISTIC =====================================================
 
-class PublicKey1Characteristic(Characteristic):
+class PublicKeyCharacteristic(Characteristic):
     PUBLICKEY_CHARACTERISTIC_UUID = "00000002-710e-4a5b-8d75-3e5b444bc3cf"
 
 
@@ -69,15 +82,15 @@ class PublicKey1Characteristic(Characteristic):
     def ReadValue(self, options):
         value = []
         
-        for c in crypto.getVkeyHex():
+        for c in crypto.public_key_ble:
             value.append(dbus.Byte(c.encode()))
 
         return value
 
 
-class Publickey1Descriptor(Descriptor):
+class PublickeyDescriptor(Descriptor):
     PUBLICKEY_DESCRIPTOR_UUID = "2901"
-    PUBLICKEY_DESCRIPTOR_VALUE = "Thingy52 Public Key1"
+    PUBLICKEY_DESCRIPTOR_VALUE = "Thingy52 Public Key"
 
     def __init__(self, characteristic):
         Descriptor.__init__(
@@ -113,14 +126,13 @@ class ChallengeCharacteristic(Characteristic):
 
     def WriteValue(self, value, options):
 
-        val = []
-
-        print ("received challenge")
+        val = ""
         
         for v in value:
-            val.append(hex(int(v)))
+            # val.append(hex(int(v)))
+            val += str(v)
 
-        crypto.setChallenge (val)
+        crypto.receiveChallenge (val)
 
 class ChallengeDescriptor(Descriptor):
     CHALLENGE_DESCRIPTOR_UUID = "2901"
