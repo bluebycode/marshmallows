@@ -25,11 +25,13 @@ A really helpful guide for installing Ruby can be found here: https://gorails.co
 
 If you have already met the requirements, you will need to define some environment variables, set up the database and install the dependencies (gems):
 
-First of all, create a `.env` file with the following variables and the values needed for connecting to a local database
+First of all, create a `.env` file with the following variables and the values needed for connecting to a local database, the port for this app server and the web service
 
 ```
 MYSQL_USER="..."
 MYSQL_PASS="..."
+PORT=...
+WEB_URL="..."
 ```
 
 Install the required gems

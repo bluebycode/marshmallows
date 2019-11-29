@@ -49,6 +49,7 @@ function get(callbackUrl, credentialOptions, onSuccess) {
       user_id: credentialOptions.user_id,
       challenge: credentialOptions.challenge
     };
+
     callback(callbackUrl, onSuccess, full_credential);
   }).catch(function(error) {
     console.log(error);

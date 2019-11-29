@@ -20,7 +20,6 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
   Col
 } from "reactstrap";
 
@@ -50,7 +49,8 @@ class Login extends React.Component {
             <CardHeader className="bg-transparent pb-5" style={{marginBottom: "-100px"}}>
               <div className="text-muted text-center mt-2 mb-3">
                 <img alt="..." style={{width: "200px"}} src={require("../../assets/img/brand/marshmallow_brand.png")} />
-                <span><h1>**** { AuthApi.u2fenabled ? "true" : "false" } { AuthApi.isLoggedIn ? "true" : "false" }</h1></span>
+                <span><h1>MarshMallows</h1></span>
+                <br/>
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
@@ -62,12 +62,13 @@ class Login extends React.Component {
                         <i className="ni ni-circle-08" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Id" type="email" 
+                    <Input placeholder="Username" type="text" 
                       onChange={event => this.setState({ username: event.target.value})}
                     />
+                    <br/>
                   </InputGroup>
                 </FormGroup>
-                { AuthApi.isLoggedIn ? <FormGroup>
+                { !AuthApi.isLoggedIn ? <FormGroup>
                   <InputGroup className="input-group-alternative" shows={this.state.totp.toString()}>
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
@@ -90,26 +91,6 @@ class Login extends React.Component {
               </Form>
             </CardBody>
           </Card>
-          <Row className="mt-3">
-            { !AuthApi.u2fenabled ? <Col xs="6">
-              <a
-                className="text-light"
-                href="/auth/totp-registration"
-                onClick={e => e.preventDefault()}
-              >
-                <small>TOTP registration</small>
-              </a>
-                </Col> : null}
-            <Col className="text-right" xs="6">
-              <a
-                className="text-light"
-                href="/auth/register"
-                onClick={e => e.preventDefault()}
-              >
-                <small>Nuevo registro</small>
-              </a>
-            </Col>
-          </Row>
         </Col>
       </>
     );

@@ -4,7 +4,8 @@ class RegistrationsController < ApplicationController
   def new; end
 
   def invite
-    user = User.new
+    filtered_params = params.require(:registration).permit(:username)
+    user = User.new(username: filtered_params[:username])
 
     if user.save
       render json: { status: 'ok', token: user.register_token }
@@ -20,16 +21,15 @@ class RegistrationsController < ApplicationController
       render json: { status: 'error', message: 'Token not found' } && return
     end
 
-    user = User.find_by(register_token: filtered_params[:token])
+    user = User.find_by(register_token: filtered_params[:token],
+                        username: filtered_params[:username])
 
     if user.blank?
-      render json: { status: 'error', message: 'Invalid token' } && return
+      render json: { status: 'error', message: 'Invalid username or token' } && return
     elsif user.token_expiration_date.before?(10.minutes.ago)
       user.delete
       render json: { status: 'error', message: 'Token expired' } && return
     end
-
-    user.update!(username: filtered_params[:username])
 
     create_options = WebAuthn::Credential.options_for_create(
       user: {
@@ -47,8 +47,7 @@ class RegistrationsController < ApplicationController
 
   def callback
     webauthn_credential = WebAuthn::Credential.from_create(params)
-    user = User.find_by(webauthn_id: params[:user][:id])
-    user.update!(username: params[:user][:name])
+    user = User.find_by(webauthn_id: params[:user][:id], username: params[:user][:name])
     webauthn_credential.verify(params[:challenge])
 
     key = Key.new(

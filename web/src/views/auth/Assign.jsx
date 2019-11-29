@@ -1,7 +1,7 @@
 
 import React from "react";
 import AuthApi from '../../services/auth';
-
+import Configuration from "../../services/configuration"
 // reactstrap components
 import {
   Card,
