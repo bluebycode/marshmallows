@@ -9,7 +9,7 @@
 
 ## Interaction
 
-![](https://github.com/vrandkode/marshmallows/raw/master/docs/diagrama_agent.jpg)
+![](https://github.com/vrandkode/marshmallows/raw/master/docs/diagramas/diagrama_agent.jpg)
 ![](https://github.com/vrandkode/marshmallows/raw/master/docs/diagramas/e2e.jpg)
 
 ## Endpoints
