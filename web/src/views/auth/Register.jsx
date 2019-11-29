@@ -4,7 +4,6 @@ import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
 import queryString from 'query-string';
 import Configuration from "../../services/configuration"
-import { NotificationManager } from 'react-notifications';
 
 // reactstrap components
 import {
@@ -33,10 +32,13 @@ class Register extends React.Component {
   registration = (e) => {
     e.preventDefault()
     AuthApi.registration(this.state.username, this.state.token, (data) => {
-      Credential.create(Configuration.authAddress("/registration/callback"), data, (response) => {
-        this.props.history.push("/auth/login");
-        NotificationManager.success('You have been registered', 'Successful!', 2000);
-      });
+      if(data.status === "error"){
+        this.setState({error: data.message})
+      } else{
+        Credential.create(Configuration.authAddress("/registration/callback"), data, (response) => {
+          this.props.history.push("/auth/login");
+        });
+      }
     });
   }
 
@@ -59,12 +61,14 @@ class Register extends React.Component {
                        onKeyDown={event => {
                         this.setState({ username: event.target.value})
                         if (event.key === 'Enter') {
-                          this.registration(event) 
+                          this.registration(event)
                         }
-                       }
-                      }
+                      }}
                     />
                   </InputGroup>
+                  <p style={{fontSize:"20px", marginTop:"5px", color: "#CC0000", textAlign: "center"}}>
+                    { this.state.error ? this.state.error : ""}
+                  </p>
                 </FormGroup>
                 <div className="text-center">
                   <Button className="mt-4" color="primary" type="button" 

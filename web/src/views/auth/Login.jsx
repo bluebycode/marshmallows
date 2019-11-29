@@ -5,7 +5,6 @@ import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
 
 import Configuration from "../../services/configuration"
-import { NotificationManager } from 'react-notifications';
 
 
 // reactstrap components
@@ -33,10 +32,13 @@ class Login extends React.Component {
   login = e => {
     e.preventDefault()
     AuthApi.login(this.state.username, (data) => {
-      Credential.get(Configuration.authAddress("/login/callback"), data, (response) => {
-        this.props.history.push("/cloud/index");
-        NotificationManager.success('You have been logged in', 'Successful!', 2000);
-      });
+      if(data.status === "error"){
+        this.setState({error: data.message})
+      }else{
+        Credential.get(Configuration.authAddress("/login/callback"), data, (response) => {
+          this.props.history.push("/cloud/dashboard");
+        });
+      }
     });
   }
   
@@ -64,9 +66,18 @@ class Login extends React.Component {
                     </InputGroupAddon>
                     <Input placeholder="Username" type="text" 
                       onChange={event => this.setState({ username: event.target.value})}
+                       onKeyDown={event => {
+                        this.setState({ username: event.target.value})
+                        if (event.key === 'Enter') {
+                          this.login(event)
+                        }
+                      }}
                     />
                     <br/>
                   </InputGroup>
+                  <p style={{fontSize:"20px", marginTop:"5px", color: "#CC0000", textAlign: "center"}}>
+                    { this.state.error ? this.state.error : ""}
+                  </p>
                 </FormGroup>
                 { !AuthApi.isLoggedIn ? <FormGroup>
                   <InputGroup className="input-group-alternative" shows={this.state.totp.toString()}>
