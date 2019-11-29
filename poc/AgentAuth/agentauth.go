@@ -19,15 +19,10 @@ import (
 	requests "./protocol"
 	"github.com/golang/protobuf/proto"
 	"gopkg.in/noisesocket.v0"
+	"bufio"
+	"fmt"
+	"os"
 )
-
-// Read auth token
-func readToken () string {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Please, enter agent token: ")
-	token, _ := reader.ReadString('\n')
-	return token
-}
 
 // Generate ID
 func generateId () string {
@@ -49,8 +44,6 @@ func generateKeys() noise.DHKey {
 
 // HTTP Connection to Server
 func httpClient(address string, port int, path string, buffer []byte) {
-	pub1, _ := base64.StdEncoding.DecodeString("L9Xm5qy17ZZ6rBMd1Dsn5iZOyS7vUVhYK+zby1nJPEE=")
-	priv1, _ := base64.StdEncoding.DecodeString("TPmwb3vTEgrA3oq6PoGEzH5hT91IDXGC9qEMc8ksRiw=")
 
 	clientKeys := noise.DHKey{
 		Public:  pub1,
@@ -122,4 +115,6 @@ func main() {
 	}
 
 	httpClient("localhost", 7777, "/open", data)
+
+	fmt.Println("token", token)
 }

@@ -8,8 +8,10 @@ import (
 
 type Agent struct {
 	*Peer
-	token     string
-	timestamp int64
+	token       string // deviceId
+	secretToken string
+	publicKey   string
+	timestamp   int64
 }
 
 func (agent *Agent) close() {
@@ -29,9 +31,8 @@ func (agent *Agent) read() {
 		}
 
 		// Reading the message from peer
-		// ...
 		log.Println("[peer::agent] Reading", messageType, p)
-		msg := &Message{} // replace this
+		msg := &Message{messageType, p, agent.Peer, int32(0)}
 
 		select {
 		case agent.hub.agentsIncoming <- msg:
