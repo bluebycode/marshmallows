@@ -42,6 +42,17 @@ class AuthApi
         });
     }
 
+    generateAgentToken = callback => {
+        fetch(Configuration.authAddress("/agent_registration"), {
+            method: 'post',
+            headers: { 'Accept': 'application/json' },
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            callback(data.token)
+        });
+    }
+
     login = (username, callback) => {
         fetch(Configuration.authAddress("/login"), {
             method: 'post',

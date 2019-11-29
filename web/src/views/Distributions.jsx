@@ -1,5 +1,7 @@
 
 import React from "react";
+import AuthApi from '../services/auth';
+
 import {
   Button,
   Card,
@@ -9,10 +11,19 @@ import {
   Row,
   Col
 } from "reactstrap";
+
 import Header from "../components/Headers/Header.jsx";
 
 class Distributions extends React.Component {
   state = {};
+
+  download = e => {
+    e.preventDefault()
+    AuthApi.generateAgentToken( token => {
+      this.setState({token})
+    });
+  }
+
   render() {
     return (
       <>
@@ -44,7 +55,7 @@ class Distributions extends React.Component {
                       className="btn-neutral btn-icon"
                       color="default"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}>
+                      onClick={e => this.download(e)}>
                       <span className="btn-inner--icon">
                         <img
                           alt="..."
@@ -53,6 +64,10 @@ class Distributions extends React.Component {
                       </span>
                       <span className="btn-inner--text">Raspbian image</span>
                     </Button>
+                    <br/>
+                    <br/>
+                    <span style={{fontSize:"17px", marginTop:"5px"}}>{ this.state.token ? "This is your personal token, which will be required during the isntallation. Do not share it with anyone: " : ""}</span>
+                    <span style={{fontSize:"17px", marginTop:"5px", fontWeight: "bold"}}>{ this.state.token ? this.state.token : ""}</span>
                     </div>  
                   </div>
                 </CardBody>
