@@ -8,8 +8,10 @@ import (
 
 type Agent struct {
 	*Peer
-	token     string
-	timestamp int64
+	token       string // deviceId
+	secretToken string
+	publicKey   string
+	timestamp   int64
 }
 
 func (agent *Agent) close() {
