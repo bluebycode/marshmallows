@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/rand"
-	"encoding/base64"
 	"fmt"
 	"log"
 	"net"
@@ -35,7 +34,7 @@ func createServerPlainChannel(address string, port int, channelMux *http.ServeMu
 func createServerNoiseChannel(address string, port int, channelMux *http.ServeMux) {
 
 	listener, err := noisesocket.Listen(":"+strconv.FormatInt(int64(port), 10),
-		&noisesocket.ConnectionConfig{StaticKey: generateServerKeys(false)})
+		&noisesocket.ConnectionConfig{StaticKey: generateKeys()})
 	if err != nil {
 		fmt.Println("Error listening:", err)
 		os.Exit(1)
@@ -46,31 +45,9 @@ func createServerNoiseChannel(address string, port int, channelMux *http.ServeMu
 	}
 }
 
-func generateClientKeys(randomise bool) noise.DHKey {
-	if randomise {
-		key, _ := noise.DH25519.GenerateKeypair(rand.Reader)
-		return key
-	}
-	pub, _ := base64.StdEncoding.DecodeString("L9Xm5qy17ZZ6rBMd1Dsn5iZOyS7vUVhYK+zby1nJPEE=")
-	priv, _ := base64.StdEncoding.DecodeString("TPmwb3vTEgrA3oq6PoGEzH5hT91IDXGC9qEMc8ksRiw=")
-	return noise.DHKey{
-		Public:  pub,
-		Private: priv,
-	}
-}
-
-func generateServerKeys(randomise bool) noise.DHKey {
-	if randomise {
-		key, _ := noise.DH25519.GenerateKeypair(rand.Reader)
-		return key
-	}
-
-	pub, _ := base64.StdEncoding.DecodeString("J6TRfRXR5skWt6w5cFyaBxX8LPeIVxboZTLXTMhk4HM=")
-	priv, _ := base64.StdEncoding.DecodeString("vFilCT/FcyeShgbpTUrpru9n5yzZey8yfhsAx6DeL80=")
-	return noise.DHKey{
-		Public:  pub,
-		Private: priv,
-	}
+func generateKeys() noise.DHKey {
+	key, _ := noise.DH25519.GenerateKeypair(rand.Reader)
+	return key
 }
 
 // createClientNoiseChannel ... create a WS channel from client side
@@ -85,7 +62,7 @@ func createClientNoiseChannel(address string, port int, path string, callback fu
 		Proxy:            http.ProxyFromEnvironment,
 		HandshakeTimeout: 45 * time.Second,
 		NetDial: func(network, addr string) (net.Conn, error) {
-			conn, err := noisesocket.Dial(addr, &noisesocket.ConnectionConfig{StaticKey: generateClientKeys(false)})
+			conn, err := noisesocket.Dial(addr, &noisesocket.ConnectionConfig{StaticKey: generateKeys()})
 			if err != nil {
 				fmt.Println("Dial", err)
 			}
