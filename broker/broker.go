@@ -1,7 +1,9 @@
 package main
 
 import (
+	"cmd/asm/internal/flags"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -100,12 +102,7 @@ var devices = make(map[string]*Device, 1000)
 var channels = make(map[int]channelIO)
 var releases = make(map[int]chan bool)
 
-func main() {
-
-	hub := newMainHub(&devices)
-	go hub.Start()
-
-	port := 8081
+func listenBroker(port int, hub *Hub) {
 
 	// routes
 	router := mux.NewRouter()
@@ -128,6 +125,7 @@ func main() {
 	// devices available
 	router.HandleFunc("/devices",
 		httpDevicesHandler).Methods("GET")
+
 	router.HandleFunc("/open/{token}",
 		httpPeersHandler(hub)).Methods("GET")
 
@@ -146,4 +144,17 @@ func main() {
 	if err != nil {
 		log.Fatal("[main] ListenAndServe: ", err)
 	}
+}
+
+// ./broker -agentsPort 8888 -brokerPort 9999
+func main() {
+	var agents = flag.Int("agentsPort", 8082, "default port listener - agent noise broker")
+	var broker = flag.Int("brokerPort", 8081, "default port listener - main broker")
+	flags.Parse()
+
+	hub := newMainHub(&devices)
+	go hub.Start()
+
+	go listenAgents(*agents, hub)
+	listenBroker(*broker, hub)
 }
