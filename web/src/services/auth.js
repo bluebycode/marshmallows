@@ -7,18 +7,15 @@ import Configuration from "./configuration"
  */
 class AuthApi 
 {
-    constructor(){
-    }
-    
     // Registration endpoint (localhost:1414/registrations/)
-    registration = (username, callback) => {
+    registration = (username, token, callback) => {
         fetch(Configuration.authAddress("/registration"), {
             method: 'post',
             headers: { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({username: username})
+            body: JSON.stringify({username, token})
         }).then(response => {
             return response.json();
         }).then(data => {

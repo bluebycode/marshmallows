@@ -2,7 +2,7 @@
 import React from "react";
 import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
-
+import queryString from 'query-string';
 import Configuration from "../../services/configuration"
 import { NotificationManager } from 'react-notifications';
 
@@ -25,16 +25,16 @@ class Register extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      username: ''
+      username: '',
+      token: queryString.parse(props.location.search).token
     }
   }
 
   // Calls the authentication to perform registration
   registration = (e) => {
     e.preventDefault()
-    AuthApi.registration(this.state.username, (data) => {
+    AuthApi.registration(this.state.username, this.state.token, (data) => {
       Credential.create(Configuration.authAddress("/registration/callback"), data, (response) => {
-        console.log("registered!");
         this.props.history.push("/auth/login");
         NotificationManager.success('You have been registered', 'Successful!', 2000);
       });

@@ -22,16 +22,14 @@ function callback(url, onSuccess, body) {
   }).then(function(response) {
     if (response.ok) {
       // window.location.replace("/")
-      console.log("SI444");
       onSuccess("genial!")
     } else {
-      console.log("NO1212");
+      console.log("error");
     }
   });
 }
 
 function create(callbackUrl, credentialOptions, onSuccess) {
-  console.log("--------------", credentialOptions);
   WebAuthnJSON.create({ "publicKey": credentialOptions }).then(credential => {
     const full_credential = {
       ...credential,
@@ -42,8 +40,6 @@ function create(callbackUrl, credentialOptions, onSuccess) {
   }).catch(function(error) {
     console.log(error);
   });
-
-  console.log("Creating new public key credential...");
 }
 
 function get(callbackUrl, credentialOptions, onSuccess) {
@@ -53,13 +49,10 @@ function get(callbackUrl, credentialOptions, onSuccess) {
       user_id: credentialOptions.user_id,
       challenge: credentialOptions.challenge
     };
-    console.log("object", full_credential);
     callback(callbackUrl, onSuccess, full_credential);
   }).catch(function(error) {
     console.log(error);
   });
-
-  console.log("Getting public key credential...");
 }
 
 export { create, get }

@@ -32,7 +32,6 @@ class Login extends React.Component {
   }
 
   login = e => {
-    console.log(e)
     e.preventDefault()
     AuthApi.login(this.state.username, (data) => {
       Credential.get(Configuration.authAddress("/login/callback"), data, (response) => {
