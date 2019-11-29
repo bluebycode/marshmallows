@@ -29,9 +29,8 @@ func (agent *Agent) read() {
 		}
 
 		// Reading the message from peer
-		// ...
 		log.Println("[peer::agent] Reading", messageType, p)
-		msg := &Message{} // replace this
+		msg := &Message{messageType, p, agent.Peer, int32(0)}
 
 		select {
 		case agent.hub.agentsIncoming <- msg:
