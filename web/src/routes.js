@@ -63,7 +63,7 @@ var routes = [
     visible: false,
     icon: "ni ni-cloud-download-95 text-blue",
     component: Assign,
-    layout: "/admin"
+    layout: "/auth"
   },
 ];
 export default routes;
