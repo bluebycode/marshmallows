@@ -13,7 +13,6 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
   Col
 } from "reactstrap";
 
@@ -42,7 +41,7 @@ class Totp extends React.Component {
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
               <Form role="form">
-                <img 
+                <img alt="totp"
                   style={{width:"100%", marginBottom: "15px"}}
                   src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"></img>
                 <FormGroup>

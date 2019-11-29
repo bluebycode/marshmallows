@@ -4,8 +4,6 @@ import 'react-splitter-layout/lib/index.css';
 import Nodes from './Nodes.jsx'
 import XTerminal from '../terminal/XTerminal';
 
-import { Button, Modal,  ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-
 class Navigation extends React.Component {
     constructor(props) {
         super(props);

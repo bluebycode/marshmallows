@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resource :registration, only: :create do
     post :callback
-    get :invite
+    post :invite
   end
 
   resource :login, only: :create do

@@ -201,7 +201,6 @@ DEPENDENCIES
   rubocop
   spring
   spring-watcher-listen (~> 2.0.0)
-  tzinfo-data
   webauthn (~> 2.0.0)
 
 RUBY VERSION

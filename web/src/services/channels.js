@@ -1,5 +1,3 @@
-import Configuration from "./configuration"
-
 /**
  * Writer adapter class.
  */

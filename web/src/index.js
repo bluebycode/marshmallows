@@ -10,8 +10,6 @@ import "./assets/scss/terminal/terminal.css";
 import AdminLayout from "./layouts/Admin.jsx";
 import AuthLayout from "./layouts/Auth.jsx";
 
-import { NotificationContainer } from 'react-notifications';
-
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
