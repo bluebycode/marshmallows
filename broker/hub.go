@@ -75,12 +75,19 @@ func handleAgentRegistration(hub *Hub, agent *Agent) {
 	if _, ok := hub.agents[agent.token]; ok {
 		log.Println("[hub] Agent already registered") //@todo close?
 	} else {
-		hub.agents[agent.token] = agent
-		log.Println("[hub] Agent under registration:", agent.token)
-		hub.devices[agent.token] = &Device{
-			Token:     agent.token,
-			Timestamp: "", //@todo: please fix this
-		}
+
+		// make authentication
+		go authTokenValidation(authApiAddress, agent.secretToken, c, func() {
+			// Registration
+			hub.agents[agent.token] = agent
+			log.Println("[hub] Agent under registration:", agent.token)
+
+			// Update the devices pool
+			hub.devices[agent.token] = &Device{
+				Token:     agent.token,
+				Timestamp: "", //@todo: please fix this
+			}
+		})
 	}
 }
 
