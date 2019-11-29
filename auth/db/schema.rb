@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_11_28_190350) do
 
-  create_table "keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "external_id"
     t.string "public_key"
     t.integer "sign_count", default: 0, null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2019_11_28_190350) do
     t.index ["user_id"], name: "index_keys_on_user_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "username"
     t.string "current_challenge"
     t.string "webauthn_id"

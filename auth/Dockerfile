@@ -6,7 +6,5 @@ COPY Gemfile* ./
 RUN gem install bundler
 RUN bundle install
 
+ENV RAILS_ENV production
 COPY . ./
-
-EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0"]
