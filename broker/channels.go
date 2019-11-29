@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,17 +31,48 @@ func newChannelIO(sid int) *channelIO {
 		release:  make(chan bool, 1)}
 }
 
+// sources
 var sources = make(map[string]int)
+
+// finished channels
+var finishedChannels = make(map[string]chan bool)
 
 // createChannel ... create channel and attach I/O on channel
 func createChannel(channelID string, port int, finished chan bool,
-	incoming *chan []byte, outgoing *chan []byte, cin *chan []byte, cout *chan []byte) {
+	cio channelIO) {
 	log.Println("Creating channel ", channelID, "port:", port)
 
 	channelMux := http.NewServeMux()
-	channelMux.HandleFunc("/ws", wsAdminChannelHandler(channelID, incoming, outgoing, cin, cout))
-	go createServerChannel("localhost", port, channelMux) //@todo: add security and non placeholders addresses
+	channelMux.HandleFunc("/ws", wsAdminChannelHandler(channelID, &cio.incoming, &cio.outgoing, &cio.cin, &cio.cout))
+	// @todo replace with createServerNoiseChannel("localhost", port, channelMux)
+	createServerChannel("localhost", port, channelMux) //@todo: add security and non placeholders addresses
 	finished <- true
+}
+
+// wsAdminCreateChannelHandler ... handles the admin endpoint to create channel
+func wsAdminCreateChannelHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	channelID := params["channel"]
+	port := params["port"]
+
+	// @todo: add a way to provide sessions and sid
+	sid := 1
+	sources["127.0.0.1"] = sid
+	cio := newChannelIO(sid)
+	channels[sid] = *cio
+
+	// create common hub
+	fmt.Println("admin channels:", channels, "IO:", *cio, "sources", sources)
+
+	// @todo Add channel before
+	var finished = make(chan bool)
+	finishedChannels[channelID] = finished
+
+	// create the server channel listening from agent
+	go createChannel(channelID, Str2int(port), finished, *cio)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(channelID)
 }
 
 // wsAdminChannelHandler ... receives and handle incoming websockets connections, assign them into channel hub
@@ -89,12 +121,12 @@ func wsChannelHandler(w http.ResponseWriter, r *http.Request) {
 
 	// create pipeline attached to session
 	sid := sources[source]
-	c := newChannelIO(sid)
-	channels[sid] = *c
+	//cio := newChannelIO(sid)
+	cio := channels[sid]
 
 	// create common hub
-	fmt.Println("channels:", channels, *c)
-	hub := newChannelHub(c.incoming, c.outgoing, c.cin, c.cout)
+	fmt.Println("channels:", channels, "IO:", cio, "sources", sources)
+	hub := newChannelHub(cio.incoming, cio.outgoing, cio.cin, cio.cout)
 	wsChannelHubHandler(ws, hub) // waiting for messages
 	fmt.Println("pass!")
 }
