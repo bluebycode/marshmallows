@@ -7,6 +7,10 @@
 * *Peer* (Client/Agent). A representation of connection, mostly used to represent agents or users.
 * *Hub*.
 
+## Interaction
+
+![](https://github.com/vrandkode/marshmallows/raw/master/docs/diagramas/e2e.jpg)
+
 ## Endpoints
 
 * Agents 
