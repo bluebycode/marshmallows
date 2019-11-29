@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marsmallows-auth-deployment
+  name: auth
   labels:
-    app: marsmallows-auth
+    app: marsmallows
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: marsmallows-auth
+      app: marsmallows
   template:
     metadata:
       labels:
-        app: marsmallows-auth
+        app: marsmallows
     spec:
       containers:
-      - name: marsmallows-auth
+      - name: api
         image: mm_auth:latest
         imagePullPolicy: Never
         ports:

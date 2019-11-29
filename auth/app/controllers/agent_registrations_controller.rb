@@ -4,7 +4,7 @@ class AgentRegistrationsController < ApplicationController
   def create
     agent = AgentRegister.new
 
-    if agent.save # Do not save, but check if it could be saved
+    if agent.save
       render json: { status: 'ok', token: agent.token }
     else
       render json: { status: 'error', message: 'Agent could not be created' }
