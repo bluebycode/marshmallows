@@ -1,0 +1,7 @@
+token: aaaaaaa
+domain: localhost
+security:
+  noise: false
+api:
+  auth: "http://localhost:1414"
+  broker: "http://localhost:8081"
