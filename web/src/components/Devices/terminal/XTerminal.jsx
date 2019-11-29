@@ -6,6 +6,11 @@ import { Terminal} from 'xterm'
 import { Writer, Channel } from '../../../services/channels'
 import Configuration from '../../../services/configuration'
 
+class MockWriter {
+    write(message){
+        console.log(">>>>>>>>>", message)
+    }
+}
 class TerminalHandler {
     constructor(container){
         this.terminal = new Terminal({
@@ -21,6 +26,9 @@ class TerminalHandler {
             this.terminal.write('\r\n~$ ');
         }
         this.terminal.prompt()
+
+        const mock = new MockWriter()
+        const auth = new Channel(new Writer(mock))
 
         const channel = new Channel(new Writer(this.terminal))
 
@@ -40,18 +48,26 @@ class TerminalHandler {
             }
         });
         this.channel = channel
+        this.auth = auth;
     }
     // TerminalHandler.connect("d3cd", () => { Connected!})
     connect = (deviceToken) => {
-        setTimeout(() => { 
-            this.channel.open({
-                address: Configuration.brokerChannelAddress("aaaa"),
-                wrapped: true
-            }, () => {
-                console.log("CONNECTED!!!")
-                this.connected = true;
-            })
-        }, 1500)
+
+        /*this.auth.open({
+            address: Configuration.brokerConnectApiAddress("/open/" + deviceToken),
+        }, (response) => {
+            console.log(response, "CONNECTED!!!")*/
+            setTimeout(() => { 
+                this.channel.open({
+                    address: Configuration.brokerChannelAddress(deviceToken),
+                    wrapped: true
+                }, () => {
+                    console.log("CONNECTED!!!")
+                    this.connected = true;
+                })
+            }, 1500)
+       // })
+        
     }
 }
 
@@ -77,7 +93,7 @@ class XTerminal extends React.Component {
 
     componentDidMount(){
         this.remote = new TerminalHandler(this.container)
-        this.remote.connect("aaaaa", this.props.token, () => {
+        this.remote.connect(this.props.token, () => {
             console.log("[terminal] connected")
         })  
     }
