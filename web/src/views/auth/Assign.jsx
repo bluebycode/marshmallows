@@ -1,14 +1,9 @@
 
 import React from "react";
-import * as Credential from "../../services/credential";
 import AuthApi from '../../services/auth';
-
-import Configuration from "../../services/configuration"
-import { NotificationManager } from 'react-notifications';
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardBody,
   FormGroup,

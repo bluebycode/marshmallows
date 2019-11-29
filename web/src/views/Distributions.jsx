@@ -38,7 +38,7 @@ class Distributions extends React.Component {
                   {/* Chart */}
                   <div className="shadow">
                     <span>Raspbian distribution</span>
-                    <img style={{width: "400px"}} src={require("../assets/img/distro/raspbian.png")}></img>
+                    <img alt="dist" style={{width: "400px"}} src={require("../assets/img/distro/raspbian.png")}></img>
                     <div className="btn-wrapper text-center">
                     <Button
                       className="btn-neutral btn-icon"
