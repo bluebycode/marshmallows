@@ -1,9 +1,9 @@
 package main
 
 import (
-    "bufio"
-    "fmt"
-    "os"
+	"bufio"
+	"fmt"
+	"os"
 )
 
 func main() {
@@ -11,4 +11,5 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Please, enter agent token: ")
 	token, _ := reader.ReadString('\n')
+	fmt.Println("token", token)
 }
