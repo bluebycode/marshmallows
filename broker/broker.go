@@ -12,11 +12,52 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetRole ...
+func GetRole(r *http.Request) string {
+	role := r.Header.Get("role")
+	if len(role) == 0 {
+		return "user"
+	}
+	return role
+}
+
+type AgentRegistered struct {
+	Token     string `json:"agent token"`
+	Timestamp string `json:"agent creation"`
+}
+
+func httpPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//enableCors(&w)
+		token := mux.Vars(r)["token"]
+
+		peer := &Peer{
+			hub:  hub,
+			conn: nil,
+			send: make(chan []byte, 1024)}
+
+		// Sending the registration into hub connections
+		timestamp := time.Now().Unix()
+
+		// Wrap the peer as agent or user
+		agent := &Agent{peer, token, timestamp}
+		hub.register <- agent
+
+		w.Header().Set("Content-Type", "application/json")
+
+		json.NewEncoder(w).Encode(&AgentRegistered{
+			Token:     token,
+			Timestamp: strconv.Itoa(int(timestamp)),
+		})
+	}
+}
+
 func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := mux.Vars(r)["token"]
+		role := GetRole(r)
 
-		log.Println("[hub] Register request from device '", token)
+		log.Println("[hub] Register request from device '", token, role)
 
 		upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
@@ -30,11 +71,18 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		// Sending the registration into hub connections
 		timestamp := time.Now().Unix()
 
-		// Wrap the peer as agent
-		// @todo: we should do the same with clients
-		agent := &Agent{peer, token, timestamp}
-		go agent.read()
-		hub.register <- agent
+		// Wrap the peer as agent or user
+		switch role {
+		case "agent":
+			agent := &Agent{peer, token, timestamp}
+			go agent.read()
+			hub.register <- agent
+			break
+		default:
+			client := &Client{peer, token, int32(0), timestamp}
+			go client.read()
+			hub.sessions <- client
+		}
 	}
 }
 
@@ -80,6 +128,8 @@ func main() {
 	// devices available
 	router.HandleFunc("/devices",
 		httpDevicesHandler).Methods("GET")
+	router.HandleFunc("/open/{token}",
+		httpPeersHandler(hub)).Methods("GET")
 
 	// peers (devices and client) registration
 	router.HandleFunc("/open/{token}",

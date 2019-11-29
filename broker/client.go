@@ -15,6 +15,13 @@ type Client struct {
 	timestamp int64
 }
 
+// Session ...structure contains information user-device session
+type Session struct {
+	token string
+	sid   int32
+	peer  *Client
+}
+
 func (client *Client) close() {
 
 	// Close the current connection
@@ -38,9 +45,8 @@ func (client *Client) read() {
 		}
 
 		// Reading the message from peer
-		// ...
 		log.Println("[peer::client] Reading", messageType, p)
-		msg := &Message{} // replace this
+		msg := &Message{messageType, p, client.Peer, client.sid}
 
 		select {
 		case client.hub.usersIncoming <- msg:
