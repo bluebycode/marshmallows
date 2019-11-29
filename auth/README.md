@@ -14,6 +14,10 @@ MarshMallows Auth is an API service which allows users to use the platform. It i
 
 **/login/callback (POST)** After the webauthn action has been performed, this endpoint will check that the data from the key is correct and if it is from a key that the user owns. If everything is correct, it returns an "OK", and the user should be considered logged.
 
+**/agent_registration (POST)** Will create an agent token with an expiration date and respond with the token
+
+**/agent_registration/check (POST)** Accepts a token. If the token is found in the database and it has not expired, it returns an "OK", and the agent should be considered registered.
+
 ## Development
 
 For installing or start developing this project you will need
@@ -25,13 +29,16 @@ A really helpful guide for installing Ruby can be found here: https://gorails.co
 
 If you have already met the requirements, you will need to define some environment variables, set up the database and install the dependencies (gems):
 
-First of all, create a `.env` file with the following variables and the values needed for connecting to a local database, the port for this app server and the web service
+First of all, create a `.env` file with the following variables and the values needed for connecting to a local database, the port for this app server and the web service. The last two variables are required for the customization of expiration dates.
 
 ```
 MYSQL_USER="..."
 MYSQL_PASS="..."
 PORT=...
 WEB_URL="..."
+
+USER_TOKEN_EXPIRATION_MINUTES=...
+AGENT_TOKEN_EXPIRATION_MINUTES=...
 ```
 
 Install the required gems
