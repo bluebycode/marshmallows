@@ -13,52 +13,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GetRole ...
-func GetRole(r *http.Request) string {
-	role := r.Header.Get("role")
-	if len(role) == 0 {
-		return "user"
-	}
-	return role
-}
-
 type AgentRegistered struct {
 	Token     string `json:"agent token"`
 	Timestamp string `json:"agent creation"`
 }
 
-func httpPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		//enableCors(&w)
-		token := mux.Vars(r)["token"]
-
-		peer := &Peer{
-			hub:  hub,
-			conn: nil,
-			send: make(chan []byte, 1024)}
-
-		// Sending the registration into hub connections
-		timestamp := time.Now().Unix()
-
-		// Wrap the peer as agent or user
-		agent := &Agent{peer, token, "", "", timestamp} //@todo: ?¿
-		hub.register <- agent
-
-		w.Header().Set("Content-Type", "application/json")
-
-		json.NewEncoder(w).Encode(&AgentRegistered{
-			Token:     token,
-			Timestamp: strconv.Itoa(int(timestamp)),
-		})
-	}
-}
-
 func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := mux.Vars(r)["token"]
-		role := GetRole(r)
 
-		log.Println("[hub] Register request from device '", token, role)
+		log.Println("[hub] Register request from client '", token)
 
 		upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
@@ -72,18 +36,10 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 		// Sending the registration into hub connections
 		timestamp := time.Now().Unix()
 
-		// Wrap the peer as agent or user
-		switch role {
-		case "agent":
-			agent := &Agent{peer, token, "", "", timestamp} //@todo: ?¿
-			go agent.read()
-			hub.register <- agent
-			break
-		default:
-			client := &Client{peer, token, int32(0), timestamp}
-			go client.read()
-			hub.sessions <- client
-		}
+		// Wrap the peer user
+		client := &Client{peer, token, int32(0), timestamp}
+		go client.read()
+		hub.sessions <- client
 	}
 }
 
@@ -91,7 +47,12 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 func httpDevicesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(devices)
+	list := make([]*Device, 0, len(devices))
+	for _, device := range devices {
+		list = append(list, device)
+		fmt.Println(device, list)
+	}
+	json.NewEncoder(w).Encode(list)
 }
 
 // Devices pool
@@ -122,13 +83,12 @@ func listenBroker(port int, hub *Hub) {
 	/////////////////////////////////////////////////////////////////////////////
 
 	// devices available
-	router.HandleFunc("/devices",
+	router.HandleFunc("/devices.json",
 		httpDevicesHandler).Methods("GET")
 
-	router.HandleFunc("/open/{token}",
-		httpPeersHandler(hub)).Methods("GET")
-
-	// peers (devices and client) registration
+	// users
+	/*router.HandleFunc("/open/{token}",
+	httpPeersHandler(hub)).Methods("GET")*/
 	router.HandleFunc("/open/{token}",
 		wsPeersHandler(hub))
 
@@ -145,15 +105,16 @@ func listenBroker(port int, hub *Hub) {
 	}
 }
 
-var authApiAddress string
-
 // ./broker \
 //		-agentsPort 8888 -brokerPort 9999 \
-// 		-authApiAddress "http://192.168.43.104:3000/agent_registration/check"
+// 		-authApiAddress "https://192.168.43.104:3000/agent_registration/check"
+
+var authApiAddress string
+
 func main() {
 	var agents = flag.Int("agentsPort", 8082, "default port listener - agent noise broker")
 	var broker = flag.Int("brokerPort", 8081, "default port listener - main broker")
-	flag.StringVar(&authApiAddress, "authApiAddress", "http://auth.marshmallows.cloud", "authAddress")
+	flag.StringVar(&authApiAddress, "authApiAddress", "https://auth.marshmallows.cloud", "authAddress")
 	flag.Parse()
 
 	hub := newMainHub(&devices)

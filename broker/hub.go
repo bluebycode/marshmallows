@@ -73,17 +73,17 @@ func handleSession(hub *Hub, client *Client) {
 }
 
 func handleAgentRegistration(hub *Hub, agent *Agent) {
-	if _, ok := hub.agents[agent.token]; ok {
-		log.Println("[hub] Agent already registered") //@todo close?
-	} else {
-
-		// Ask for authorisation
-		c := make(chan bool)
-		go authTokenValidation(authApiAddress+"/agent_registration/check", agent.secretToken, c, func() {
-
+	// Ask for authorisation
+	c := make(chan bool)
+	go authTokenValidation(authApiAddress+"/agent_registration/check", agent.secretToken, c,
+		func() {
 			// Registration if agent is allowed
-			hub.agents[agent.token] = agent
-			log.Println("[hub] Agent under registration:", agent.token)
+			if _, ok := hub.agents[agent.token]; ok {
+				log.Println("[hub] Agent already registered")
+			} else {
+				log.Println("[hub] Agent has been registered")
+				hub.agents[agent.token] = agent
+			}
 
 			// Update the devices pool with the latest information
 			// from already registered device
@@ -92,7 +92,6 @@ func handleAgentRegistration(hub *Hub, agent *Agent) {
 				Timestamp: time.Now().Unix(),
 			}
 		})
-	}
 }
 
 // Start .. performs the subscription to receive and sending connections
