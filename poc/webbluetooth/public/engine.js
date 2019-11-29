@@ -54,8 +54,10 @@ async function getPublicKey() {
     console.log('Reading Public Key...');
     
     var publicKey = await publicKeyCharacteristic.readValue();
-
-    console.log(publicKey)
+    publicKey = new Uint8Array(publicKey.buffer);
+    publicKey = String.fromCharCode.apply(null, publicKey)
+    
+    console.log('public key: '+publicKey)
     
   } catch(error) {
     console.log('Argh! ' + error);
