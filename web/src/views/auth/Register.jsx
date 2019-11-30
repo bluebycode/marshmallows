@@ -36,7 +36,11 @@ class Register extends React.Component {
         this.setState({error: data.message})
       } else{
         Credential.create(Configuration.authAddress("/registration/callback"), data, (response) => {
-          this.props.history.push("/auth/login");
+          if (response.error){
+            this.setState({error: data.message})
+          }else{
+            this.props.history.push("/auth/login");
+          }
         });
       }
     });

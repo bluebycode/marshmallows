@@ -36,7 +36,11 @@ class Login extends React.Component {
         this.setState({error: data.message})
       }else{
         Credential.get(Configuration.authAddress("/login/callback"), data, (response) => {
-          this.props.history.push("/cloud/dashboard");
+          if (response.status === "error"){
+            this.setState({error: response.message})
+          }else{
+            this.props.history.push("/cloud/dashboard");
+          }
         });
       }
     });
