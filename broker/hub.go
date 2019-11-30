@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"strconv"
 	"sync/atomic"
@@ -122,6 +123,92 @@ func (hub *Hub) Start() {
 			// Messages outgoing to users (text layout)
 			// - Check if users was already registered
 			log.Println("[hub->user] Incoming message to user", msg)
+			handleIncomingMessages(hub, msg)
+		}
+	}
+}
+
+func handleIncomingMessages(hub *Hub, message *Message) {
+	ack := &TRequest{}
+	fmt.Println("[hub->user] Handle message", message.data, string(message.data))
+	if message.messageType == websocket.BinaryMessage {
+		fmt.Println("[hub->user] not a text message")
+		return
+	}
+
+	var req TRequest
+	json.Unmarshal([]byte(string(message.data)), &req)
+	fmt.Println(req)
+	switch req.Type {
+	case "auth":
+
+		// Client should not send authentication if session was not longer stablished
+		_sid := message.sid
+		if _sid == 0 {
+			ack.Type = "auth"
+			ack.Data = map[string]interface{}{
+				"message": "client lost the session information",
+			}
+			data, _ := json.Marshal(ack)
+			message.peer.conn.WriteMessage(websocket.TextMessage, data)
+			return
+		}
+
+		// Send authentication data to the system's agent
+		// with static public key from client stored on session.
+		// Extra authentication also is sent in order to establish access control feature.
+		session, _ := hub.sids[_sid]
+		if _, ok := hub.agents[session.token]; ok {
+			authData := req.Data["authdata"].(string)
+			log.Println("[hub::user] Authentication with authdata", authData)
+
+			// @todo: worst access control logic ever :(
+			if authData == "not_authorised_user" {
+				ack.Type = "auth"
+				ack.Data = map[string]interface{}{
+					"error": "not authorised",
+				}
+				data, _ := json.Marshal(ack)
+				message.peer.conn.WriteMessage(websocket.TextMessage, data)
+				return
+			}
+
+			sid := int(_sid)
+			channelID := session.token
+			port := 7000 + sid // @todo: replace with a discovery solution
+
+			// Let's create the channel
+			// @todo: add a way to provide sessions and sid
+			sources["127.0.0.1"] = int(sid)
+			cio := newChannelIO(int(sid))
+			channels[sid] = *cio
+
+			// Add a session before channel creation
+			sessions[session.token] = &ChannelSession{
+				sid:        1,
+				deviceID:   channelID,
+				publicKey:  "",
+				targetIP:   brokerHostname,
+				targetPort: port,
+			}
+
+			// create common hub
+			fmt.Println("dedicated channels:", channels, "IO:", *cio, "sources", sources)
+
+			// @todo Add channel before
+			var finished = make(chan bool)
+			finishedChannels[channelID] = finished
+
+			// create the server channel listening from agent
+			go createChannel(channelID, port, finished, *cio)
+
+			// Sending the ack
+			ack.Type = "auth"
+			ack.Data = map[string]interface{}{
+				"ack": "ok",
+			}
+			data, _ := json.Marshal(ack)
+			message.peer.conn.WriteMessage(websocket.TextMessage, data)
 		}
 	}
 }

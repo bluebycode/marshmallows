@@ -97,13 +97,16 @@ func listenBroker(port int, hub *Hub) {
 // ./broker \
 //		-agentsPort 8888 -brokerPort 9999 \
 // 		-authApiAddress "https://192.168.43.104:3000/agent_registration/check"
+//      -hostname "localhost"
 
 var authApiAddress string
+var brokerHostname string
 
 func main() {
 	var agents = flag.Int("agentsPort", 8082, "default port listener - agent noise broker")
 	var broker = flag.Int("brokerPort", 8081, "default port listener - main broker")
 	flag.StringVar(&authApiAddress, "authApiAddress", "https://auth.marshmallows.cloud", "authAddress")
+	flag.StringVar(&brokerHostname, "hostname", "127.0.0.1", "authAddress")
 	flag.Parse()
 
 	hub := newMainHub(&devices)
