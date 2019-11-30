@@ -9,6 +9,7 @@ import AuthFooter from "../components/Footers/AuthFooter.jsx";
 import { NotificationManager } from 'react-notifications';
 import routes from "../routes.js";
 import AuthApi from '../services/auth';
+import 'react-notifications/lib/notifications.css';
 import { NotificationContainer } from 'react-notifications';
 
 class Auth extends React.Component {
