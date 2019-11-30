@@ -40,6 +40,7 @@ async function connectDeviceAndCacheCharacteristics() {
 
   console.log('Getting Public Key Characteristic...');
   publicKeyCharacteristic = await service.getCharacteristic('00000002-710e-4a5b-8d75-3e5b444bc3cf');
+  challengeCharacteristic = await service.getCharacteristic('00000003-710e-4a5b-8d75-3e5b444bc3cf');
   // batteryLevelCharacteristic.addEventListener('characteristicvaluechanged',
   //     handleBatteryLevelChanged);
 }
@@ -47,13 +48,27 @@ async function connectDeviceAndCacheCharacteristics() {
 async function initLoginProcess() {
   var publicKey = await getPublicKey();
   var challenge = generateChallenge();
+
   color = challenge.substring(challenge.indexOf(',')+1)
   console.log(color)
-
   // todo: show color ========
 
+
   var echallenge = await encryptChallenge(publicKey, challenge);
-  console.log(echallenge)
+  setChallenge (echallenge)
+  
+}
+
+async function setChallenge(echallenge) {
+  try {
+    var enc = new TextEncoder();
+    encodedChallenge = enc.encode(echallenge);
+    
+    await challengeCharacteristic.writeValue(encodedChallenge)
+  } catch(error) {
+    console.log('Argh! ' + error);
+  }
+
 }
 
 async function getPublicKey() {
@@ -145,20 +160,3 @@ function str2ab(str) {
   }
   return buf;
 }
-
-
-// async function setBattery() {
-//   try {
-//     if (!bluetoothDevice) {
-//       await requestDevice();
-//     }
-//     await connectDeviceAndCacheCharacteristics();
-
-//     console.log('Set Battery Level...');
-//     var val = Uint8Array.of(1);
-//     await batteryLevelCharacteristic.writeValue(val)
-//     console.log("Set battery level")
-//   } catch(error) {
-//     console.log('Argh! ' + error);
-//   }
-// }
