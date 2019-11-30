@@ -17,15 +17,15 @@ async function onDisconnected() {
   console.log('> Bluetooth Device disconnected');
 }
 
-// function handleBatteryLevelChanged(event) {
-//   console.log('> Value Level1 is ', event.target.value);
-//   var key = new Array(32)
-//   for(var n=0;n<32;n++){
-//     key.push(event.target.value.getUint8(n));
-//   }
+function handlechallengeResponseChanged(event) {
+  console.log('> Value Level1 is ', event.target.value);
+  var key = new Array(32)
+  for(var n=0;n<32;n++){
+    key.push(event.target.value.getUint8(n));
+  }
   
-//   console.log('> Value Level is ', key);
-// }
+  console.log('> Value Level is ', key);
+}
 
 async function connectDeviceAndCacheCharacteristics() {
   if (bluetoothDevice.gatt.connected && publicKeyCharacteristic) {
@@ -41,8 +41,7 @@ async function connectDeviceAndCacheCharacteristics() {
   console.log('Getting Public Key Characteristic...');
   publicKeyCharacteristic = await service.getCharacteristic('00000002-710e-4a5b-8d75-3e5b444bc3cf');
   challengeCharacteristic = await service.getCharacteristic('00000003-710e-4a5b-8d75-3e5b444bc3cf');
-  // batteryLevelCharacteristic.addEventListener('characteristicvaluechanged',
-  //     handleBatteryLevelChanged);
+  challengeResponseCharacteristic.addEventListener('characteristicvaluechanged', handlechallengeResponseChanged);
 }
 
 async function initLoginProcess() {
@@ -50,6 +49,7 @@ async function initLoginProcess() {
   var challenge = generateChallenge();
 
   color = challenge.split(",")
+  rnumber = color[0]
 
   console.log("rgb("+color[1].toString()+","+color[2].toString()+","+color[3].toString()+")")
 
