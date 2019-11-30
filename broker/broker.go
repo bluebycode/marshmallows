@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -43,17 +42,7 @@ func wsPeersHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// httpDevicesHandler ... retrieve all devices connected
-func httpDevicesHandler(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-	w.Header().Set("Content-Type", "application/json")
-	list := make([]*Device, 0, len(devices))
-	for _, device := range devices {
-		list = append(list, device)
-		fmt.Println(device, list)
-	}
-	json.NewEncoder(w).Encode(list)
-}
+var cloudID = generateId()
 
 // Devices pool
 var devices = make(map[string]*Device, 1000)
