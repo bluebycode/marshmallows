@@ -49,9 +49,11 @@ async function initLoginProcess() {
   var publicKey = await getPublicKey();
   var challenge = generateChallenge();
 
-  color = challenge.substring(challenge.indexOf(',')+1)
-  console.log(color)
-  // todo: show color ========
+  color = challenge.split(",")
+
+  console.log("rgb("+color[1].toString()+","+color[2].toString()+","+color[3].toString()+")")
+
+  document.getElementById("myDIV").style.backgroundColor = "rgb("+color[1].toString()+","+color[2].toString()+","+color[3].toString()+")"
 
 
   var echallenge = await encryptChallenge(publicKey, challenge);
