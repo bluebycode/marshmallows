@@ -58,18 +58,63 @@ func sendAuthentication(address string, secretToken string, keys *noise.DHKey, d
 	if err != nil {
 		log.Fatal("marshaling error: ", err)
 	}
-	secureHTTPPost(address, data)
+	secureHTTPPost(address, keys, data)
 }
 
-// secureHTTPPost ... sends a Http Post protected with a Noise channel
-func secureHTTPPost(address string, buffer []byte) {
-	clientKeys := generateKeys()
+func secureHTTPGet(address string, keys *noise.DHKey) {
 	transport := &http.Transport{
 		MaxIdleConnsPerHost: 1,
 		DisableKeepAlives:   true,
 
 		DialTLS: func(network, addr string) (net.Conn, error) {
-			conn, err := noisesocket.Dial(addr, &noisesocket.ConnectionConfig{StaticKey: clientKeys})
+			conn, err := noisesocket.Dial(addr, &noisesocket.ConnectionConfig{StaticKey: *keys})
+			if err != nil {
+				fmt.Println("Dial", err)
+			}
+			return conn, err
+		},
+	}
+
+	c := make(chan bool)
+	go func() {
+		cli := &http.Client{
+			Transport: transport,
+		}
+		buffer := make([]byte, 1024)
+		reader := bytes.NewReader(buffer)
+		req, err := http.NewRequest("GET", "https://"+address, reader)
+		if err != nil {
+			panic(err)
+		}
+
+		resp, err := cli.Do(req)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		_, err = io.Copy(ioutil.Discard, resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		err = resp.Body.Close()
+		if err != nil {
+			panic(err)
+		}
+		c <- true
+	}()
+
+	<-c
+	fmt.Println("done.")
+}
+
+// secureHTTPPost ... sends a Http Post protected with a Noise channel
+func secureHTTPPost(address string, keys *noise.DHKey, buffer []byte) {
+	transport := &http.Transport{
+		MaxIdleConnsPerHost: 1,
+		DisableKeepAlives:   true,
+
+		DialTLS: func(network, addr string) (net.Conn, error) {
+			conn, err := noisesocket.Dial(addr, &noisesocket.ConnectionConfig{StaticKey: *keys})
 			if err != nil {
 				fmt.Println("Dial", err)
 			}

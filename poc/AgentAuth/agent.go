@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
+
+var brokerAddress = "localhost:8082"
 
 func main() {
 
@@ -14,7 +17,18 @@ func main() {
 
 	// {D,d} keys used to shared with broker sharing with the party
 	keys := generateKeys()
-	sendAuthentication("localhost:8082/open", secretToken, &keys, id)
+	sendAuthentication(brokerAddress+"/open", secretToken, &keys, id)
 
 	fmt.Println("token", secretToken)
+
+	// builds an interval signal used as Hearbeat
+	beacon := time.NewTicker(30 * time.Second)
+	defer beacon.Stop()
+
+	for {
+		select {
+		case timestamp := <-beacon.C:
+			handleBeaconRequest(&keys, id, timestamp)
+		}
+	}
 }
