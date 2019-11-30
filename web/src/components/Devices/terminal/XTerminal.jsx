@@ -71,6 +71,7 @@ class TerminalHandler {
                         })
                     }else if (attributes["ack"]){
                         NotificationManager.success("Connected to " + deviceToken, "Success", 3000)
+                        this.terminal.write("Connecting to system ...\r\n~$ ")
                         console.log("open the connection")
                         setTimeout(() => { 
                             this.channel.open({
@@ -85,17 +86,6 @@ class TerminalHandler {
                 break;
             }
         });
-            /*setTimeout(() => { 
-                this.channel.open({
-                    address: Configuration.brokerChannelAddress(deviceToken),
-                    wrapped: true
-                }, () => {
-                    console.log("CONNECTED!!!")
-                    this.connected = true;
-                })
-            }, 1500)*/
-       //})
-        
     }
 }
 

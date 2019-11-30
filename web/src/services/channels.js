@@ -36,6 +36,10 @@ class Channel {
         }
     }
     write = (type, message) => {
+        if (!message){
+            this.socket.send(type)
+            return
+        }
         this.socket.send(JSON.stringify({
             type: type,
             data: message
