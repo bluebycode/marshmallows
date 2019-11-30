@@ -44,6 +44,14 @@ async function connectDeviceAndCacheCharacteristics() {
   //     handleBatteryLevelChanged);
 }
 
+async function initLoginProcess() {
+  var publicKey = await getPublicKey();
+  var challenge = generateChallenge();
+  // todo: show color 
+  var echallenge = encryptChallenge(publicKey, challenge);
+  console.log(echallenge)
+}
+
 async function getPublicKey() {
   try {
     if (!bluetoothDevice) {
@@ -55,23 +63,28 @@ async function getPublicKey() {
     
     var publicKey = await publicKeyCharacteristic.readValue();
     publicKey = new Uint8Array(publicKey.buffer);
-    publicKey = String.fromCharCode.apply(null, publicKey)
+    publicKey = String.fromCharCode.apply(null, publicKey);
 
-    console.log('public key: '+publicKey)
+    return publicKey;
     
   } catch(error) {
     console.log('Argh! ' + error);
   }
+
 }
 
-async function generateChallenge() {
+function generateChallenge() {
   var rnumber = randomInt(0,1024);
   var red = randomInt(0,256);
   var green = randomInt(0,256);
   var blue = randomInt(0,256);
 
   var challenge = rnumber.toString()+','+red.toString()+','+green.toString()+','+blue.toString();
-  console.log(challenge)
+  return challenge;
+}
+
+function encryptChallenge(publicKey, challenge) {
+  return publicKey + challenge;
 }
 
 function randomInt(low, high) {

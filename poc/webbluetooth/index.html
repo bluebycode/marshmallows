@@ -51,8 +51,7 @@
             event.stopPropagation();
             event.preventDefault();
             if (isWebBluetoothEnabled()) {
-                getPublicKey();
-                generateChallenge();
+                initLoginProcess();
             }
         });
         // document.querySelector('#buttonSetBattery').addEventListener('click', function(event) {
