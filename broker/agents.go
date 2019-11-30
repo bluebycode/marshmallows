@@ -16,6 +16,17 @@ import (
 	"gopkg.in/noisesocket.v0"
 )
 
+// ChannelSession ... Session<->Agent link
+type ChannelSession struct {
+	sid        int64
+	deviceID   string
+	publicKey  string
+	targetIP   string
+	targetPort int
+}
+
+var sessions = make(map[string]*ChannelSession, 1000)
+
 func serverHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := ioutil.ReadAll(r.Body)
@@ -28,6 +39,24 @@ func serverHandler(hub *Hub) func(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("unmarshaling error: ", err)
 		}
 		fmt.Println("RESPONSE", body, auth.GetToken(), auth.GetPublicKey(), auth.GetDeviceId())
+
+		if _, ok := sessions[auth.GetDeviceId()]; ok {
+			channelSession := sessions[auth.GetDeviceId()]
+			log.Println("[hub] Found session for agent", channelSession)
+			ack := &requests.AuthAck{
+				Id:        proto.Int32(2),
+				Sid:       proto.Int32(int32(channelSession.sid)),
+				PublicKey: proto.String(auth.GetPublicKey()),
+				Address:   proto.String(channelSession.targetIP),
+				Port:      proto.Int32(int32(channelSession.targetPort)),
+			}
+			data, err := proto.Marshal(ack)
+			if err != nil {
+				log.Fatal("[hub] marshaling error: ", err)
+			}
+			w.Write(data)
+			return
+		}
 
 		hub.register <- &Agent{
 			token:       auth.GetDeviceId(),

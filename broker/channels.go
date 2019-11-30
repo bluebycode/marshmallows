@@ -62,6 +62,15 @@ func wsAdminCreateChannelHandler(w http.ResponseWriter, r *http.Request) {
 	cio := newChannelIO(sid)
 	channels[sid] = *cio
 
+	// Add a session before channel creation
+	sessions[channelID] = &ChannelSession{
+		sid:        1,
+		deviceID:   channelID,
+		publicKey:  "",
+		targetIP:   "127.0.0.1",
+		targetPort: Str2int(port),
+	}
+
 	// create common hub
 	fmt.Println("admin channels:", channels, "IO:", *cio, "sources", sources)
 
