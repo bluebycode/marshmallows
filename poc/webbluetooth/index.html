@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
  <head>
-   <title>Node Workshop</title>
+   <title>BLE Authentication</title>
    <style>
 
         .links line {
@@ -18,16 +18,28 @@
           font-family: sans-serif;
           font-size: 10px;
         }
+
+        #myDIV {
+        width: 600px;
+        height: 600px;
+        background-color: white;
+        color: white;
+}
         
         </style>
  </head>
  <body>
     <script src="engine.js"></script>
-    <p>Device Info</p>
+
+    <h1> Login with BLE secure device </h1>
         
     <form>
-        <button id="buttonGetBattery">Get session key</button>
+        <button id="buttonSelectSecureDevice">Select secure device</button>
     </form>
+
+    <div id="myDIV">
+        
+    </div>
     
     <script>
         
@@ -43,21 +55,14 @@
             }
         }
         </script>
+
     <script>
-        document.querySelector('#buttonGetBattery').addEventListener('click', function(event) {
-            console.log("get battery")
+        document.querySelector('#buttonSelectSecureDevice').addEventListener('click', function(event) {
+            console.log("Get secure device public key")
             event.stopPropagation();
             event.preventDefault();
             if (isWebBluetoothEnabled()) {
-                getBattery();
-            }
-        });
-        document.querySelector('#buttonSetBattery').addEventListener('click', function(event) {
-            console.log("set battery")
-            event.stopPropagation();
-            event.preventDefault();
-            if (isWebBluetoothEnabled()) {
-                setBattery();
+                initLoginProcess();
             }
         });
     </script>
