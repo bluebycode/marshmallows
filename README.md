@@ -15,6 +15,12 @@
 
 Solución de infraestructuras de red que permite que varias nubes privadas sean visibles entre sí, y que permite la gestión y una comunicación segura entre dispositivos conectados, principalmente de tipo IoT. Viene reforzada con mecanismos de seguridad ligeros y autenticación por doble factor 2FA o con claves físicas U2F.
 
+* [Broker](broker)
+* [Agent](agent)
+* [Frontend](web)
+* [Authentication API](web)
+
+
 ## Descripción
 MarshMallows es un proyecto basado en computación en la nube que proporciona una solución tipo Platform as a Service para la gestión y comunicaciones seguras de dispositivos IoT. La infraestructura se refuerza con mecanismos de seguridad ligeros y autenticación por doble factor (2FA) o con claves físicas (U2F). Además, permite asociarse con otras nubes desplegadas en la misma red, permitiendo la comunicación y visualización de dispositivos, acorde a los privilegios definidos.
 
