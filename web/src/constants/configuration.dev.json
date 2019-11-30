@@ -1,0 +1,11 @@
+{
+    "token": "aaaaaa",
+    "domain": "localhost",
+    "encryption": {
+        "noise": true
+    },
+    "api": {
+        "auth": "http://localhost:1414",
+        "broker": "http://localhost:8081"
+    }
+}
