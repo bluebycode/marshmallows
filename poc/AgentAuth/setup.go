@@ -138,7 +138,9 @@ func secureHTTPPost(address string, keys *noise.DHKey, buffer []byte) {
 			fmt.Println(err)
 			return
 		}
-		_, err = io.Copy(ioutil.Discard, resp.Body)
+
+		response, err := ioutil.ReadAll(resp.Body)
+		//_, err = io.Copy(ioutil.Discard, resp.Body)
 		if err != nil {
 			panic(err)
 		}
@@ -146,6 +148,7 @@ func secureHTTPPost(address string, keys *noise.DHKey, buffer []byte) {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Printf("RESPONSE %s", response)
 		c <- true
 	}()
 
