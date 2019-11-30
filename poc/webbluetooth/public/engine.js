@@ -2,6 +2,8 @@
 var bluetoothDevice;
 var publicKeyCharacteristic;
 
+var importedKey;
+
 async function requestDevice() {
   console.log('Requesting any Bluetooth Device...');
   bluetoothDevice = await navigator.bluetooth.requestDevice({
@@ -18,7 +20,11 @@ async function onDisconnected() {
 }
 
 function handlechallengeResponseChanged(event) {
-  console.log(event.target.value)
+
+  var challengeResponse = event.target.value.buffer
+
+  console.log(btoa(String.fromCharCode.apply(null, new Uint8Array(challengeResponse))))
+
 }
 
 async function connectDeviceAndCacheCharacteristics() {
@@ -46,8 +52,6 @@ async function initLoginProcess() {
 
   color = challenge.split(",")
   rnumber = color[0]
-
-  console.log("rgb("+color[1].toString()+","+color[2].toString()+","+color[3].toString()+")")
 
   document.getElementById("myDIV").style.backgroundColor = "rgb("+color[1].toString()+","+color[2].toString()+","+color[3].toString()+")"
 
@@ -105,7 +109,7 @@ async function encryptChallenge(publicKey, challenge) {
   var enc = new TextEncoder();
   encodedChallenge = enc.encode(challenge);
 
-  var importedKey = await importRsaKey (publicKey)
+  importedKey = await importRsaKey (publicKey)
 
   var encryptedChallenge = await window.crypto.subtle.encrypt(
     {
