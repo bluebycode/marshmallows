@@ -23,26 +23,33 @@ class Channel {
     constructor(writer){
         this.writer = writer;
     }
-    onMessage = (evt) => {
+    onMessage = (cb) => (evt) => {
         const msg = evt.data
+        if (cb) {
+            cb(msg)
+            return
+        }
         if (msg.data) {
             this.writer.write(JSON.parse(msg).data)
         }else{
             this.writer.write(msg)
         }
-        
     }
-    write = (message) => {
+    write = (type, message) => {
+        if (!message){
+            this.socket.send(type)
+            return
+        }
         this.socket.send(JSON.stringify({
-            type: "data",
+            type: type,
             data: message
         }))
     }
 
-    open = (options, callbackOnOpen) => {
+    open = (options, callbackOnOpen, callbackOnMessage) => {
         this.opts = options
         this.socket = new WebSocket(options.address)
-        this.socket.onmessage = this.onMessage
+        this.socket.onmessage = this.onMessage(callbackOnMessage)
         this.socket.onopen = callbackOnOpen
     }
 }

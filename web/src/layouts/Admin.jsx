@@ -9,6 +9,8 @@ import { Container } from "reactstrap";
 import AdminNavbar from "../components/Navbars/AdminNavbar.jsx";
 import AdminFooter from "../components/Footers/AdminFooter.jsx";
 import Sidebar from "../components/Sidebar/Sidebar.jsx";
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer } from 'react-notifications';
 
 import routes from "../routes.js";
 
@@ -69,6 +71,7 @@ class Admin extends React.Component {
             <AdminFooter />
           </Container>
         </div>
+        <NotificationContainer />
       </>
     );
   }

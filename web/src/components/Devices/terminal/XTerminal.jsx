@@ -5,12 +5,10 @@ import { FitAddon } from 'xterm-addon-fit';
 import { Terminal} from 'xterm'
 import { Writer, Channel } from '../../../services/channels'
 import Configuration from '../../../services/configuration'
+import CallbackWriter from './CallbackWriter'
+import { NotificationManager } from 'react-notifications';
 
-class MockWriter {
-    write(message){
-        console.log(">>>>>>>>>", message)
-    }
-}
+
 class TerminalHandler {
     constructor(container){
         this.terminal = new Terminal({
@@ -27,8 +25,9 @@ class TerminalHandler {
         }
         this.terminal.prompt()
 
-        const mock = new MockWriter()
-        const auth = new Channel(new Writer(mock))
+        const writer = new CallbackWriter()
+        const auth = new Channel(new Writer(writer))
+        this.auth = auth;
 
         const channel = new Channel(new Writer(this.terminal))
 
@@ -48,26 +47,45 @@ class TerminalHandler {
             }
         });
         this.channel = channel
-        this.auth = auth;
+        
     }
     // TerminalHandler.connect("d3cd", () => { Connected!})
     connect = (deviceToken) => {
 
-        /*this.auth.open({
+        this.auth.open({
             address: Configuration.brokerConnectApiAddress("/open/" + deviceToken),
         }, (response) => {
-            console.log(response, "CONNECTED!!!")*/
-            setTimeout(() => { 
-                this.channel.open({
-                    address: Configuration.brokerChannelAddress(deviceToken),
-                    wrapped: true
-                }, () => {
-                    console.log("CONNECTED!!!")
-                    this.connected = true;
-                })
-            }, 1500)
-       // })
-        
+            console.log(response, "CONNECTED!!!")
+        }, (data)=> {
+            console.log(this.auth)
+            const message = JSON.parse(data)
+            switch (message.Type){
+                case "auth":
+                    const attributes = message.Data
+                    if (attributes["sid"]){
+                        var sid = attributes["sid"]
+                        console.log(this.auth)
+                        this.auth.write("auth", {
+                            authdata: "allow_me_2_enter_could_be_a_secret",
+                            sid: sid
+                        })
+                    }else if (attributes["ack"]){
+                        NotificationManager.success("Connected to " + deviceToken, "Success", 3000)
+                        this.terminal.write("Connecting to system ...\r\n~$ ")
+                        console.log("open the connection")
+                        setTimeout(() => { 
+                            this.channel.open({
+                                address: Configuration.brokerChannelAddress(deviceToken),
+                                wrapped: true
+                            }, () => {
+                                console.log("CONNECTED!!!")
+                                this.connected = true;
+                            })
+                        }, 500)
+                    }
+                break;
+            }
+        });
     }
 }
 

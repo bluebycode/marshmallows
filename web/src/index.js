@@ -17,7 +17,6 @@ ReactDOM.render(
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
       <Redirect from="/" to="/cloud/dashboard" />
     </Switch>
-  </BrowserRouter>
-,
+  </BrowserRouter>,
   document.getElementById("root")
 );

@@ -19,6 +19,7 @@ import (
 )
 
 func httpClient(address string, port int, path string, buffer []byte) {
+	// NOTE: BE AWARE ABOUT HARDCODED KEYS, THIS IS A PROOF-OF-CONCEPT NOT THE SOLUTION
 	pub1, _ := base64.StdEncoding.DecodeString("L9Xm5qy17ZZ6rBMd1Dsn5iZOyS7vUVhYK+zby1nJPEE=")
 	priv1, _ := base64.StdEncoding.DecodeString("TPmwb3vTEgrA3oq6PoGEzH5hT91IDXGC9qEMc8ksRiw=")
 
