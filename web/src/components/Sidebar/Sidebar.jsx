@@ -38,6 +38,8 @@ import {
   Col
 } from "reactstrap";
 
+import Configuration from "../../services/configuration"
+
 var ps;
 
 class Sidebar extends React.Component {
@@ -121,7 +123,7 @@ class Sidebar extends React.Component {
                 src={logo.imgSrc}
               />
             </NavbarBrand>
-          ) : null}
+          ) : null} <h2>{Configuration.id}</h2>
           
           {/* Collapse */}
           <Collapse navbar isOpen={this.state.collapseOpen}>

@@ -3,6 +3,7 @@ import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import Nodes from './Nodes.jsx'
 import XTerminal from '../terminal/XTerminal';
+import { Button, Modal,  ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 class Navigation extends React.Component {
     constructor(props) {
@@ -51,6 +52,20 @@ class Navigation extends React.Component {
             percentage={true}>
             <div>
                 <Nodes onClickNode={this.toggleBottom.bind(this)}/>
+
+                <Modal isOpen={this.state.show} toggle={this.handleClose}>
+                    <ModalHeader closeButton>Connecting confirmation</ModalHeader>
+        
+                    <ModalBody>Already connected to device, closing and open</ModalBody>
+                    <ModalFooter>
+                        <Button variant="secondary" onClick={this.open}>
+                            Go!
+                        </Button>
+                        <Button variant="primary" onClick={this.handleClose}>
+                            Abort
+                        </Button>
+                    </ModalFooter>
+                </Modal>
             </div>
             {this.state.bottomVisible &&
             (

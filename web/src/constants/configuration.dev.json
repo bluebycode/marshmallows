@@ -1,11 +1,6 @@
 {
-    "token": "aaaaaa",
-    "domain": "localhost",
-    "encryption": {
-        "noise": true
-    },
-    "api": {
-        "auth": "http://localhost:1414",
-        "broker": "http://localhost:8081"
-    }
+    "id": "ssssss",
+    "hostname": "localhost",
+    "authApi": "https://auth.marshmallows.cloud",
+    "brokerAddress": "ws://localhost:8081"
 }
