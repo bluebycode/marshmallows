@@ -25,9 +25,9 @@ class Crypto():
         
 
         self.public_key_ble = self.key.publickey().export_key().decode("utf-8") 
-        self.public_key_ble = self.public_key_ble.replace('-----BEGIN PUBLIC KEY-----\n', '')
-        self.public_key_ble = self.public_key_ble.replace('\n-----END PUBLIC KEY-----', '')
-        self.public_key_ble = self.public_key_ble.replace("\n",'')
+        # self.public_key_ble = self.public_key_ble.replace('-----BEGIN PUBLIC KEY-----\n', '')
+        # self.public_key_ble = self.public_key_ble.replace('\n-----END PUBLIC KEY-----', '')
+        # self.public_key_ble = self.public_key_ble.replace("\n",'')
 
         self.challenge_response = 'NONE'
 
