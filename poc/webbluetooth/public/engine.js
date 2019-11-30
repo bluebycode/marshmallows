@@ -47,8 +47,12 @@ async function connectDeviceAndCacheCharacteristics() {
 async function initLoginProcess() {
   var publicKey = await getPublicKey();
   var challenge = generateChallenge();
-  // todo: show color 
-  var echallenge = encryptChallenge(publicKey, challenge);
+  color = challenge.substring(challenge.indexOf(',')+1)
+  console.log(color)
+
+  // todo: show color ========
+
+  var echallenge = await encryptChallenge(publicKey, challenge);
   console.log(echallenge)
 }
 
@@ -83,12 +87,63 @@ function generateChallenge() {
   return challenge;
 }
 
-function encryptChallenge(publicKey, challenge) {
-  return publicKey + challenge;
+async function encryptChallenge(publicKey, challenge) {
+
+  var enc = new TextEncoder();
+  encodedChallenge = enc.encode(challenge);
+
+  var importedKey = await importRsaKey (publicKey)
+
+  var encryptedChallenge = await window.crypto.subtle.encrypt(
+    {
+    name: "RSA-OAEP"
+    },
+    importedKey,
+    encodedChallenge
+  )
+
+  var base64encryptedchallenge = btoa(String.fromCharCode.apply(null, new Uint8Array(encryptedChallenge)));
+
+  return base64encryptedchallenge
+
 }
 
 function randomInt(low, high) {
   return Math.floor(Math.random() * (high - low) + low)
+}
+
+
+
+function importRsaKey(pem) {
+
+  // base64 decode the string to get the binary data
+  const binaryDerString = window.atob(pem);
+  // convert from a binary string to an ArrayBuffer
+  const binaryDer = str2ab(binaryDerString);
+
+  return window.crypto.subtle.importKey(
+    "spki",
+    binaryDer,
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-1"
+    },
+    true,
+    ["encrypt"]
+  );
+}
+
+/*
+Convert a string into an ArrayBuffer
+from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+*/
+function str2ab(str) {
+  const buf = new ArrayBuffer(str.length);
+  const bufView = new Uint8Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
 }
 
 
