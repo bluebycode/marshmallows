@@ -10,5 +10,9 @@ Rails.application.routes.draw do
     post :callback
   end
 
+  resource :agent_registration, only: :create do
+    post :check
+  end
+
   root to: 'home#index'
 end

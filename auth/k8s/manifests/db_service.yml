@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: mysql
   labels:
-    app: marsmallows-auth
+    app: mysql
 spec:
   type: LoadBalancer
   selector:
-    app: marsmallows-auth
+    app: mysql
     tier: mysql
   ports:
     - protocol: TCP

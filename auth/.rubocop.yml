@@ -5,10 +5,13 @@ Metrics/AbcSize:
   Max: 18
 
 Metrics/CyclomaticComplexity:
-  Max: 9
+  Max: 12
 
 Metrics/MethodLength:
-  Max: 13
+  Max: 20
+
+Metrics/LineLength:
+  Max: 100
 
 Style/Documentation:
   Enabled: false

@@ -28,7 +28,6 @@ class Assign extends React.Component {
   generate = (e) => {
     e.preventDefault()
     AuthApi.generateToken(this.state.username, (data) => {
-        console.log(data.token)
         this.setState({token: data.token})
     });
   }

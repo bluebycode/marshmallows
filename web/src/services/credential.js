@@ -42,7 +42,7 @@ function create(callbackUrl, credentialOptions, onSuccess) {
   });
 }
 
-function get(callbackUrl, credentialOptions, onSuccess) {
+function get(callbackUrl, credentialOptions, after_callback) {
   WebAuthnJSON.get({ "publicKey": credentialOptions }).then(function(credential) {
     const full_credential = {
       ...credential,
@@ -50,9 +50,9 @@ function get(callbackUrl, credentialOptions, onSuccess) {
       challenge: credentialOptions.challenge
     };
 
-    callback(callbackUrl, onSuccess, full_credential);
+    callback(callbackUrl, after_callback, full_credential);
   }).catch(function(error) {
-    console.log(error);
+    after_callback({status:"error", message: "Invalid key"})
   });
 }
 

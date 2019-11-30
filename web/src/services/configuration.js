@@ -3,7 +3,7 @@
  */
 class Configuration {
     webAddress = "http://localhost:8080"
-    authAddress = (path) => "http://192.168.43.104:3000" + path
+    authAddress = (path) => "https://auth.marshmallows.cloud" + path
     brokerAddress = (path) => "http://localhost:8081" + path
     brokerChannelAddress = (token) =>  "ws://localhost:8081/channel/" + token + "/ws"
     brokerConnectApiAddress = (path) =>  "ws://localhost:8081" + path
