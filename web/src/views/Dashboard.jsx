@@ -6,6 +6,7 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
 // core components
 import Header from "../components/Headers/Header.jsx";
+import Stats from "../services/stats.js";
 
 class Dashboard extends React.Component {
   render() {
@@ -29,7 +30,7 @@ class Dashboard extends React.Component {
                             Devices
                           </CardTitle>
                           <span className="h1 text-white font-weight-bold mb-0">
-                            0
+                            {Stats.devices}
                           </span>
                         </div>
                         <Col className="col-auto">

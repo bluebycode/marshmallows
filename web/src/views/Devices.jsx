@@ -16,8 +16,15 @@ import {
 // core components
 import Header from "../components/Headers/Header.jsx";
 import Navigation from '../components/Devices/navigation/Navigation';
+import DeviceModal from '../components/Distributions/DeviceModal';
+import gatewayIcon from "../assets/img/gateway.png"
+import gatewayIconHover from "../assets/img/gateway-hover.png"
 
 class Devices extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {imgHover: false, gateway2Add: false}
+  }
   render() {
     return (
       <>
@@ -25,14 +32,23 @@ class Devices extends React.Component {
         {/* Page content */}
         <Container className=" mt--7" fluid>
           {/* Table */}
+          <DeviceModal isOpen={this.state.gateway2Add} handleClose={() => this.setState({gateway2Add: false})}></DeviceModal>
           <Row>
             <Col xl="7">
                 <Card className="shadow">
                   {/* <Navigation>sss</Navigation> */}
                   <CardHeader className="bg-transparent">
-                    <Row className="align-items-center">
+                  <Row className="align-items-center">
                       <div className="col">
                         <h2 className="mb-0" style={{float:"left"}}>Map</h2>
+                        <img
+                          alt="Adding devices"
+                          src={this.state.imgHover ? gatewayIconHover: gatewayIcon}
+                          onMouseOver={()=> this.setState({imgHover:true}) }
+                          onMouseOut={()=> this.setState({imgHover:false}) }
+                          onClick={()=> this.setState({gateway2Add:true}) }
+                          style={{float:"right", width: "40px"}}
+                        />
                       </div>
                     </Row>
                   </CardHeader>
