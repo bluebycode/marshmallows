@@ -11,6 +11,15 @@ class User < ApplicationRecord
 
   def generate_invitation_token
     self.register_token = SecureRandom.alphanumeric(64)
-    self.token_expiration_date = 10.minutes.from_now
+    in_x = ENV.fetch('USER_TOKEN_EXPIRATION_MINUTES').to_i
+    self.token_expiration_date = in_x.minutes.from_now
+  end
+
+  def token_valid?
+    token_expiration_date.after?(Time.zone.now)
+  end
+
+  def token_invalid?
+    !token_valid?
   end
 end

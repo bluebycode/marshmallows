@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marsmallows-auth-mysql
+  name: mysql
   labels:
-    app: marsmallows-auth
+    app: mysql
 spec:
   selector:
     matchLabels:
-      app: marsmallows-auth
+      app: mysql
       tier: mysql
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: marsmallows-auth
+        app: mysql
         tier: mysql
     spec:
       containers:

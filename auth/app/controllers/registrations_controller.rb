@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RegistrationsController < ApplicationController
-  def new; end
-
   def invite
     filtered_params = params.require(:registration).permit(:username)
     user = User.new(username: filtered_params[:username])
@@ -25,23 +23,18 @@ class RegistrationsController < ApplicationController
                         username: filtered_params[:username])
 
     if user.blank?
-      render json: { status: 'error', message: 'Invalid username or token' } && return
-    elsif user.token_expiration_date.before?(10.minutes.ago)
+      render json: { status: 'error', message: 'Invalid username or token' }
+    elsif user.token_invalid?
       user.delete
-      render json: { status: 'error', message: 'Token expired' } && return
-    end
-
-    create_options = WebAuthn::Credential.options_for_create(
-      user: {
-        name: user.username,
-        id: user.webauthn_id
-      }
-    )
-
-    if user.valid? # Do not save, but check if it could be saved
-      render json: create_options
+      render json: { status: 'error', message: 'Token expired' }
     else
-      render json: { status: 'error', message: 'User already exists' }
+      create_options = WebAuthn::Credential.options_for_create(
+        user: {
+          name: user.username,
+          id: user.webauthn_id
+        }
+      )
+      render json: create_options
     end
   end
 
@@ -65,7 +58,7 @@ class RegistrationsController < ApplicationController
     end
   rescue WebAuthn::Error => e
     render json: { status: 'error', message: "Verification failed: #{e.message}" }
-  rescue StandardError => e
+  rescue StandardError
     render json: { status: 'error', message: 'User could not be created' }
   end
 end
