@@ -4,8 +4,8 @@
 ```
 ./broker \
   -id "valc31"
-		-agentsPort 8888 -brokerPort 9999 \
- 	-authApiAddress "https://192.168.43.104:3000/agent_registration/check"  \
+  -agentsPort 8888 -brokerPort 9999 \
+  -authApiAddress "https://192.168.43.104:3000/agent_registration/check"  \
   -hostname "localhost"  \
   -configuration configuration.prod.conf
 ```
