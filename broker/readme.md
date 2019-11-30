@@ -1,11 +1,16 @@
 
 # Broker
 
+```
+./broker \
+  -id "valc31"
+		-agentsPort 8888 -brokerPort 9999 \
+ 	-authApiAddress "https://192.168.43.104:3000/agent_registration/check"  \
+  -hostname "localhost"  \
+  -configuration configuration.prod.conf
+```
 
-## Componentes
 
-* *Peer* (Client/Agent). A representation of connection, mostly used to represent agents or users.
-* *Hub*.
 
 ## Interaction
 
